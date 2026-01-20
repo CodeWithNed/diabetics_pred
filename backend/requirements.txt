@@ -1,0 +1,23 @@
+# Core Framework
+flask
+flask-cors
+python-dotenv
+
+# AI/ML Libraries (essential only - remove unused)
+scikit-learn
+tensorflow
+keras
+xgboost
+opencv-python
+pillow
+numpy
+pandas
+joblib
+
+# LLM Integration (minimal - only what we use)
+requests
+aiohttp
+
+# Utilities
+pytest
+pytest-asyncio
