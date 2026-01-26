@@ -2,9 +2,8 @@
 import time
 from typing import Dict, Any
 import numpy as np
+from pathlib import Path
 from agents.base_agent import BaseAgent
-from models.retinal.cnn_model import RetinalCNNModel
-from models.retinal.preprocessing import preprocess_retinal_image
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -16,17 +15,42 @@ class RetinalAgent(BaseAgent):
     def __init__(self):
         """Initialize retinal agent with CNN model."""
         super().__init__(agent_id="retinal_agent")
-        self.model = RetinalCNNModel()
+        self.model = None
+        self.version = "2.0.0-attention"
 
         # Load model on initialization
         self.model_loaded = False
         try:
-            self.model.load_model()
+            self._load_model()
             self.model_loaded = True
             logger.info("RetinalAgent initialized with loaded CNN model")
         except Exception as e:
             logger.warning(f"Retinal model not loaded: {e}")
             logger.info("RetinalAgent initialized without model - using fallback")
+
+    def _load_model(self):
+        """Load retinal model directly from weights file."""
+        from tensorflow import keras
+
+        # Path to high-accuracy model with retina_weights.best.hdf5
+        model_path = Path(__file__).parent.parent / 'models' / 'retinal' / 'weights' / 'retina_attention_model.h5'
+
+        if not model_path.exists():
+            # Fallback to cnn_model_1.h5
+            logger.warning("retina_attention_model.h5 not found, trying cnn_model_1.h5")
+            model_path = model_path.parent / 'cnn_model_1.h5'
+
+        if not model_path.exists():
+            raise FileNotFoundError(f"No retinal model found at {model_path}")
+
+        logger.info(f"Loading retinal model from: {model_path.name}")
+        self.model = keras.models.load_model(
+            str(model_path),
+            compile=False,
+            safe_mode=False
+        )
+
+        logger.info(f"Model loaded: {model_path.name} (input: {self.model.input_shape}, output: {self.model.output_shape})")
 
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -49,7 +73,7 @@ class RetinalAgent(BaseAgent):
             self.log_action("analysis_started", {"image_type": type(image).__name__})
 
             # If model not loaded, return fallback
-            if not self.model_loaded or not self.model.is_loaded:
+            if not self.model_loaded or self.model is None:
                 logger.warning("Retinal model not loaded, using fallback")
                 return {
                     'status': 'success',
@@ -65,12 +89,15 @@ class RetinalAgent(BaseAgent):
 
             # Preprocess image
             logger.debug("Preprocessing retinal image")
-            processed_image = preprocess_retinal_image(image)
+            processed_image = self._preprocess_image(image)
             self.log_action("image_preprocessed", processed_image.shape)
 
-            # Run CNN inference
+            # Run CNN inference directly on model
             logger.debug("Running CNN inference")
-            prediction = self.model.predict(processed_image)
+            predictions = self.model.predict(processed_image, verbose=0)
+
+            # Parse predictions from model output
+            prediction = self._parse_prediction(predictions)
             self.log_action("prediction_complete", prediction)
 
             # Extract results
@@ -91,7 +118,7 @@ class RetinalAgent(BaseAgent):
                 'findings': findings,
                 'dr_probability': float(prediction['dr_probability']),
                 'processing_time': processing_time,
-                'model_version': self.model.version
+                'model_version': self.version
             }
 
             logger.info(f"Retinal analysis complete. DR detected: {dr_detected}, Severity: {severity}")
@@ -151,3 +178,95 @@ class RetinalAgent(BaseAgent):
         findings['total_features_detected'] = detected_features
 
         return findings
+
+    def _preprocess_image(self, image) -> np.ndarray:
+        """
+        Preprocess retinal image for model input.
+
+        Args:
+            image: Image file path, bytes, or numpy array
+
+        Returns:
+            Preprocessed image array (1, 224, 224, 3)
+        """
+        from PIL import Image
+        import io
+
+        # Load image
+        if isinstance(image, (str, Path)):
+            img = Image.open(image).convert('RGB')
+        elif isinstance(image, bytes):
+            img = Image.open(io.BytesIO(image)).convert('RGB')
+        elif isinstance(image, np.ndarray):
+            if len(image.shape) == 2:  # Grayscale
+                img = Image.fromarray(image).convert('RGB')
+            else:
+                img = Image.fromarray(image.astype('uint8'))
+        else:
+            img = image
+
+        # Resize to model input size
+        img = img.resize((224, 224))
+
+        # Convert to numpy array
+        img_array = np.array(img)
+
+        # Normalize to [0, 1]
+        img_array = img_array.astype('float32') / 255.0
+
+        # Add batch dimension
+        if len(img_array.shape) == 3:
+            img_array = np.expand_dims(img_array, axis=0)
+
+        return img_array
+
+    def _parse_prediction(self, predictions: np.ndarray) -> Dict[str, Any]:
+        """
+        Parse model output into structured prediction.
+
+        Args:
+            predictions: Model output (1, 5) with class probabilities
+
+        Returns:
+            Parsed prediction dictionary
+        """
+        # predictions shape: (1, 5) for 5 DR severity classes
+        # Classes: 0=No DR, 1=Mild, 2=Moderate, 3=Severe, 4=Proliferative
+        class_probs = predictions[0]
+        predicted_class = int(np.argmax(class_probs))
+        confidence = float(class_probs[predicted_class])
+
+        # DR detected if predicted class > 0
+        dr_detected = predicted_class > 0
+        dr_probability = float(1.0 - class_probs[0])  # 1 - P(No DR)
+
+        # Map class to severity
+        severity_map = {
+            0: 'none',
+            1: 'mild',
+            2: 'moderate',
+            3: 'severe',
+            4: 'proliferative'
+        }
+        severity = severity_map.get(predicted_class, 'unknown')
+
+        return {
+            'dr_detected': dr_detected,
+            'dr_probability': dr_probability,
+            'predicted_class': predicted_class,
+            'severity': severity,
+            'confidence': confidence,
+            'class_probabilities': {
+                'no_dr': float(class_probs[0]),
+                'mild': float(class_probs[1]),
+                'moderate': float(class_probs[2]),
+                'severe': float(class_probs[3]),
+                'proliferative': float(class_probs[4])
+            },
+            'features': {
+                'microaneurysms': dr_probability > 0.3,
+                'hemorrhages': predicted_class >= 2,
+                'exudates': predicted_class >= 2,
+                'neovascularization': predicted_class >= 3
+            }
+        }

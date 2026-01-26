@@ -4,6 +4,18 @@
 
 echo "Starting Diabetes Detection AI Backend..."
 
+# Kill any existing process on port 5000
+echo "Checking for existing processes on port 5000..."
+PID=$(lsof -t -i:5000 2>/dev/null)
+if [ -n "$PID" ]; then
+    echo "Killing process $PID on port 5000..."
+    kill -9 $PID 2>/dev/null
+    sleep 1
+    echo "Port 5000 cleared."
+else
+    echo "Port 5000 is available."
+fi
+
 # Check if virtual environment exists
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."

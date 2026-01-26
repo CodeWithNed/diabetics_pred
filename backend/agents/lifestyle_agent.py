@@ -1,9 +1,10 @@
 """Lifestyle data analysis agent using XGBoost."""
 import time
 from typing import Dict, Any
+import numpy as np
+from pathlib import Path
+import joblib
 from agents.base_agent import BaseAgent
-from models.lifestyle.xgboost_model import LifestyleXGBoostModel
-from models.lifestyle.feature_engineering import engineer_features
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -15,15 +16,46 @@ class LifestyleAgent(BaseAgent):
     def __init__(self):
         """Initialize lifestyle agent with XGBoost model."""
         super().__init__(agent_id="lifestyle_agent")
-        self.model = LifestyleXGBoostModel()
+        self.model = None
+        self.scaler = None
+        self.imputer = None
+        self.version = "1.0.0"
 
         # Load model on initialization
         try:
-            self.model.load_model()
+            self._load_model()
             logger.info("LifestyleAgent initialized with loaded Gradient Boosting model")
         except Exception as e:
             logger.warning(f"Model not loaded on init: {e}. Predictions will fail until model is loaded.")
             logger.info("LifestyleAgent initialized without model")
+
+    def _load_model(self):
+        """Load lifestyle model and preprocessors directly from weight files."""
+        weights_dir = Path(__file__).parent.parent / 'models' / 'lifestyle' / 'weights'
+
+        # Load main model (from notebook export)
+        model_path = weights_dir / 'gradient_boosting_model.pkl'
+        if not model_path.exists():
+            raise FileNotFoundError(f"Model not found: {model_path}")
+
+        self.model = joblib.load(model_path)
+        logger.info(f"Loaded Gradient Boosting model from {model_path.name}")
+
+        # Load scaler (from notebook export)
+        scaler_path = weights_dir / 'scaler.pkl'
+        if scaler_path.exists():
+            self.scaler = joblib.load(scaler_path)
+            logger.info(f"Loaded scaler from {scaler_path.name}")
+        else:
+            logger.warning("Scaler not found, predictions may be inaccurate")
+
+        # Load imputer (from notebook export)
+        imputer_path = weights_dir / 'imputer.pkl'
+        if imputer_path.exists():
+            self.imputer = joblib.load(imputer_path)
+            logger.info(f"Loaded imputer from {imputer_path.name}")
+        else:
+            logger.warning("Imputer not found")
 
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -47,12 +79,12 @@ class LifestyleAgent(BaseAgent):
 
             # Feature engineering
             logger.debug("Engineering features from lifestyle data")
-            features = engineer_features(lifestyle_data)
+            features = self._engineer_features(lifestyle_data)
             self.log_action("features_engineered", features.shape)
 
             # Run XGBoost prediction
             logger.debug("Running XGBoost prediction")
-            prediction = self.model.predict(features)
+            prediction = self._predict(features)
             self.log_action("prediction_complete", prediction)
 
             # Extract key risk factors
@@ -68,7 +100,7 @@ class LifestyleAgent(BaseAgent):
                 'key_factors': key_factors,
                 'feature_importance': prediction.get('feature_importance', {}),
                 'processing_time': processing_time,
-                'model_version': self.model.version
+                'model_version': self.version
             }
 
             logger.info(f"Lifestyle analysis complete. Risk score: {result['risk_score']:.2f}")
@@ -135,3 +167,76 @@ class LifestyleAgent(BaseAgent):
         key_factors.sort(key=lambda x: x['importance'], reverse=True)
 
         return key_factors[:5]  # Return top 5 factors
+
+    def _engineer_features(self, lifestyle_data: Dict[str, Any]) -> np.ndarray:
+        """Engineer features from raw lifestyle data."""
+        # Extract and convert features to numpy array (16 features expected)
+        features = []
+
+        # Numeric features
+        features.append(float(lifestyle_data.get('age', 40)))
+        features.append(1 if lifestyle_data.get('gender', 'male').lower() == 'male' else 0)
+        features.append(float(lifestyle_data.get('bmi', 25)))
+        features.append(float(lifestyle_data.get('hba1c', 5.5)))
+        features.append(float(lifestyle_data.get('blood_glucose', 100)))
+        features.append(float(lifestyle_data.get('blood_pressure_systolic', 120)))
+        features.append(float(lifestyle_data.get('blood_pressure_diastolic', 80)))
+        features.append(float(lifestyle_data.get('cholesterol', 200)))
+
+        # Binary features
+        features.append(1 if lifestyle_data.get('smoking', 'no').lower() in ['yes', 'true', '1'] else 0)
+
+        # Alcohol: no=0, moderate=1, heavy=2
+        alcohol = lifestyle_data.get('alcohol', 'no').lower()
+        features.append(0 if alcohol == 'no' else (1 if alcohol == 'moderate' else 2))
+
+        features.append(float(lifestyle_data.get('physical_activity', 30)))
+        features.append(1 if lifestyle_data.get('family_history', 'no').lower() in ['yes', 'true', '1'] else 0)
+        features.append(float(lifestyle_data.get('sleep_hours', 7)))
+
+        # Stress: low=0, moderate=1, high=2
+        stress = lifestyle_data.get('stress_level', 'moderate').lower()
+        features.append(0 if stress == 'low' else (1 if stress == 'moderate' else 2))
+
+        # Diet quality: poor=0, average=1, good=2
+        diet = lifestyle_data.get('diet_quality', 'average').lower()
+        features.append(0 if diet == 'poor' else (1 if diet == 'average' else 2))
+
+        # Add interaction feature
+        bmi_age_interaction = features[2] * features[0] / 100
+        features.append(bmi_age_interaction)
+
+        return np.array([features])
+
+    def _predict(self, features: np.ndarray) -> Dict[str, Any]:
+        """Run prediction with preprocessing."""
+        if self.model is None:
+            raise RuntimeError("Model not loaded")
+
+        # Apply imputer to numeric columns (indices 2-7) if available
+        if self.imputer is not None:
+            features_copy = features.copy()
+            numeric_indices = [2, 3, 4, 5, 6, 7]
+            numeric_features = features_copy[:, numeric_indices]
+            numeric_imputed = self.imputer.transform(numeric_features)
+            features_copy[:, numeric_indices] = numeric_imputed
+            features = features_copy
+
+        # Apply scaler if available
+        if self.scaler is not None:
+            features = self.scaler.transform(features)
+
+        # Predict
+        prediction_proba = self.model.predict_proba(features)[0]
+        prediction_class = self.model.predict(features)[0]
+
+        risk_score = float(prediction_proba[1])  # Probability of class 1 (diabetic)
+        confidence = float(max(prediction_proba))
+
+        return {
+            'risk_score': risk_score,
+            'probability': risk_score,
+            'predicted_class': int(prediction_class),
+            'confidence': confidence,
+            'feature_importance': {}  # Can be populated from model.feature_importances_ if needed
+        }
