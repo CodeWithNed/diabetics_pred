@@ -1,0 +1,18 @@
+{
+  "retinal_weight": 0.10302367326008756,
+  "lifestyle_weight": 0.8969763267399125,
+  "best_loss": 0.02715033947506299,
+  "method": "cross_validated_scipy",
+  "constraint": "w1 + w2 = 1",
+  "validation": {
+    "cv_folds": 5,
+    "std_w1": 0.043495684585316566,
+    "std_w2": 0.04349568458531654,
+    "training_samples": 1000
+  },
+  "performance": {
+    "retinal_standalone_accuracy": 0.8335193005540508,
+    "lifestyle_standalone_accuracy": 0.9054394341688076,
+    "fused_accuracy_estimate": 0.972849660524937
+  }
+}

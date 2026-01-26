@@ -125,10 +125,6 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
 
 # Pyre type checker
 .pyre/
@@ -146,39 +142,8 @@ cython_debug/
 .vscode/
 *.code-workspace
 
-# Data files
-*.csv
-*.xlsx
-*.xls
-*.json
-*.parquet
-*.h5
-*.hdf5
-*.pkl
-*.pickle
-data/
-datasets/
-raw_data/
-processed_data/
-output/
-results/
 
-# Model files
-*.model
-*.h5
-*.pb
-*.pth
-*.pt
-*.onnx
-models/
-saved_models/
-checkpoints/
 
-# Logs
-logs/
-*.log
-runs/
-tensorboard/
 
 # OS files
 .DS_Store
@@ -192,17 +157,6 @@ tmp/
 temp/
 *.tmp
 
-# Secrets and credentials
-*.key
-*.pem
-credentials.json
-secrets.yaml
-config.ini
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
 
 # Documentation build
 docs/_build/
