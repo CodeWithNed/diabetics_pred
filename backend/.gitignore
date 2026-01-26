@@ -1,20 +1,5 @@
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
 wheels/
 *.egg-info/
 .installed.cfg
@@ -37,28 +22,9 @@ ENV/
 *.swo
 *~
 
-# Logs
-logs/
-*.log
-
-# Database
-*.db
-*.sqlite
-*.sqlite3
-
-# Model weights
-models/retinal/weights/*
-models/lifestyle/weights/*
-!models/retinal/weights/.gitkeep
-!models/lifestyle/weights/.gitkeep
-
 # Uploaded files
 uploads/*
 !uploads/.gitkeep
-
-# Datasets (too large for git)
-data/datasets/*
-!data/datasets/.gitkeep
 
 # OS
 .DS_Store
