@@ -142,7 +142,7 @@ cython_debug/
 .vscode/
 *.code-workspace
 
-
+data/datasets
 
 
 # OS files
