@@ -22,7 +22,7 @@ class Config:
     DATABASE_URL = os.getenv('DATABASE_URL', 'sqlite:///diabetes_app.db')
 
     # CORS
-    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000').split(',')
+    CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:3000,http://localhost:3002').split(',')
 
     # Paths
     BASE_DIR = Path(__file__).parent

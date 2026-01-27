@@ -57,6 +57,22 @@ function ResultsPage() {
     return labels[level] || 'Unknown'
   }
 
+  const getDRSeverityLabel = (severity) => {
+    if (!severity) return 'Detected'
+
+    const severityMap = {
+      'mild': 'Mild Risk',
+      'moderate': 'Moderate Risk',
+      'severe': 'Severe Risk',
+      'proliferative': 'Proliferative DR',
+      'non-proliferative': 'Non-Proliferative DR'
+    }
+
+    // Handle both lowercase and mixed case inputs
+    const normalized = severity.toLowerCase()
+    return severityMap[normalized] || severity
+  }
+
   const openChat = (recommendation, index) => {
     setSelectedRecommendation({ text: recommendation, index })
     setChatMessages([
@@ -145,8 +161,8 @@ function ResultsPage() {
             <span className="summary-label">Retinal Scan</span>
             <strong className={risk_assessment?.retinal_analysis?.dr_detected ? 'text-warning' : 'text-success'}>
               {risk_assessment?.retinal_analysis?.dr_detected ?
-                `DR ${risk_assessment?.retinal_analysis?.severity || 'Detected'}` :
-                'No DR'}
+                getDRSeverityLabel(risk_assessment?.retinal_analysis?.severity) :
+                'No DR Detected'}
             </strong>
           </motion.div>
 

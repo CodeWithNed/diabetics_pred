@@ -208,8 +208,27 @@ class LifestyleAgent(BaseAgent):
 
         return np.array([features])
 
+    def _calibrate_probability(self, prob: float) -> float:
+        """
+        Calibrate the probability to handle high baseline.
+        Maps [0.4, 1.0] range to [0.0, 1.0] for better fusion.
+        """
+        # Observed that minimum probability is around 0.4
+        min_prob = 0.4
+        max_prob = 1.0
+
+        # Linear calibration
+        if prob <= min_prob:
+            return 0.0
+        elif prob >= max_prob:
+            return 1.0
+        else:
+            # Map [0.4, 1.0] to [0.0, 1.0]
+            calibrated = (prob - min_prob) / (max_prob - min_prob)
+            return float(np.clip(calibrated, 0, 1))
+
     def _predict(self, features: np.ndarray) -> Dict[str, Any]:
-        """Run prediction with preprocessing."""
+        """Run prediction with preprocessing and calibration."""
         if self.model is None:
             raise RuntimeError("Model not loaded")
 
@@ -230,12 +249,17 @@ class LifestyleAgent(BaseAgent):
         prediction_proba = self.model.predict_proba(features)[0]
         prediction_class = self.model.predict(features)[0]
 
-        risk_score = float(prediction_proba[1])  # Probability of class 1 (diabetic)
+        raw_risk_score = float(prediction_proba[1])  # Probability of class 1 (diabetic)
+
+        # Apply calibration to handle high baseline
+        calibrated_risk_score = self._calibrate_probability(raw_risk_score)
+
         confidence = float(max(prediction_proba))
 
         return {
-            'risk_score': risk_score,
-            'probability': risk_score,
+            'risk_score': calibrated_risk_score,
+            'probability': calibrated_risk_score,
+            'raw_probability': raw_risk_score,  # Keep raw for debugging
             'predicted_class': int(prediction_class),
             'confidence': confidence,
             'feature_importance': {}  # Can be populated from model.feature_importances_ if needed

@@ -213,53 +213,104 @@ class FusionWeightOptimizer:
     def optimize_with_scipy(self,
                            y_true: np.ndarray,
                            retinal_preds: np.ndarray,
-                           lifestyle_preds: np.ndarray) -> Dict:
+                           lifestyle_preds: np.ndarray,
+                           multi_start: bool = True,
+                           retinal_bias: float = 0.1) -> Dict:
         """
-        Alternative optimization using scipy.optimize for more robust convergence.
+        Alternative optimization using scipy.optimize with multiple improvements.
 
         Args:
             y_true: Ground truth labels
             retinal_preds: Predictions from retinal model
             lifestyle_preds: Predictions from lifestyle model
+            multi_start: Use multiple random initializations to avoid local minima
+            retinal_bias: Bias term to favor retinal model (0-1, higher = more bias)
 
         Returns:
             Optimization results
         """
         def objective(w1):
-            """Objective function to minimize."""
-            return self.compute_loss(
+            """Objective function with optional retinal bias."""
+            base_loss = self.compute_loss(
                 y_true, retinal_preds, lifestyle_preds, w1[0], 1-w1[0]
             )
 
-        # Constraint: 0 < w1 < 1
-        bounds = [(0.01, 0.99)]
+            if retinal_bias > 0:
+                # Add penalty for giving too little weight to retinal
+                retinal_penalty = retinal_bias * np.exp(-5 * w1[0])  # Exponential penalty for low w1
+                # Also add a soft constraint to prefer w1 > 0.6
+                soft_constraint = 0.01 * max(0, 0.6 - w1[0])**2
+                return base_loss + retinal_penalty + soft_constraint
+            else:
+                # Pure optimization without bias
+                return base_loss
 
-        # Initial guess
-        x0 = np.array([self.w1])
+        # Use full range if no bias, otherwise constrain
+        if retinal_bias > 0:
+            bounds = [(0.5, 0.95)]  # Force retinal weight to be at least 50%
+        else:
+            bounds = [(0.01, 0.99)]  # Full range
 
-        # Optimize
-        result = minimize(
-            objective,
-            x0,
-            method='L-BFGS-B',
-            bounds=bounds,
-            options={'maxiter': 100}
-        )
+        best_result = None
+        best_loss = float('inf')
 
-        # Update weights
-        self.w1 = result.x[0]
-        self.w2 = 1 - self.w1
+        if multi_start:
+            # Try multiple starting points across the full range to avoid local minima
+            initial_points = [0.1, 0.3, 0.5, 0.7, 0.9]  # Cover full range
+        else:
+            initial_points = [self.w1]
 
-        logger.info(f"Scipy optimization complete. Optimal weights: "
-                   f"w1={self.w1:.3f}, w2={self.w2:.3f}, Loss={result.fun:.4f}")
+        for x0_val in initial_points:
+            x0 = np.array([x0_val])
 
-        return {
-            'optimal_w1': self.w1,
-            'optimal_w2': self.w2,
-            'optimal_loss': result.fun,
-            'success': result.success,
-            'message': result.message
-        }
+            # Skip if outside bounds
+            if x0_val < bounds[0][0] or x0_val > bounds[0][1]:
+                continue
+
+            # Optimize
+            result = minimize(
+                objective,
+                x0,
+                method='L-BFGS-B',
+                bounds=bounds,
+                options={'maxiter': 200, 'ftol': 1e-8}
+            )
+
+            # Track best result (based on actual loss, not biased objective)
+            actual_loss = self.compute_loss(
+                y_true, retinal_preds, lifestyle_preds, result.x[0], 1-result.x[0]
+            )
+
+            if actual_loss < best_loss:
+                best_loss = actual_loss
+                best_result = result
+
+        # Use best result
+        if best_result is not None:
+            self.w1 = best_result.x[0]
+            self.w2 = 1 - self.w1
+
+            logger.info(f"Scipy optimization complete (multi_start={multi_start}). "
+                       f"Optimal weights: w1={self.w1:.3f}, w2={self.w2:.3f}, "
+                       f"Loss={best_loss:.4f}")
+
+            return {
+                'optimal_w1': self.w1,
+                'optimal_w2': self.w2,
+                'optimal_loss': best_loss,
+                'success': best_result.success,
+                'message': best_result.message,
+                'multi_start': multi_start,
+                'n_starts': len(initial_points)
+            }
+        else:
+            return {
+                'optimal_w1': 0.85,
+                'optimal_w2': 0.15,
+                'optimal_loss': float('inf'),
+                'success': False,
+                'message': 'Optimization failed'
+            }
 
     def cross_validate_weights(self,
                               data_splits: List[Dict],
