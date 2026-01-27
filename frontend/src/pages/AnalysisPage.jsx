@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { Upload, User, Activity, Heart, ArrowRight, Loader, Ruler, Weight, Info } from 'lucide-react'
+import { Upload, User, Activity, Heart, ArrowRight, Loader, Ruler, Weight, Info, Moon, Coffee, Dumbbell, Brain, Apple, Cigarette, FlaskConical, ChevronDown, ChevronUp } from 'lucide-react'
 import { analyzeComplete } from '../services/api'
 import './AnalysisPage.css'
 
@@ -38,13 +38,133 @@ function AnalysisPage() {
     // Lab Results
     HbA1c: '',
     hdl_cholesterol: '',
+    total_cholesterol: '',  // Adding total cholesterol
+    blood_glucose: '',  // Adding blood glucose
 
     // Medical History
     has_hypertension: false,
     takes_cholesterol_med: false,
-    family_diabetes_history: false
+    family_diabetes_history: false,
+
+    // Lifestyle & Habits (NEW FIELDS)
+    smoking: 'no',
+    alcohol: 'no',
+    physical_activity: '',  // minutes per week
+    sleep_hours: '',
+    stress_level: 'moderate',
+    diet_quality: 'average'
   })
   const [loading, setLoading] = useState(false)
+  const [showScenarios, setShowScenarios] = useState(true) // Toggle for showing/hiding scenarios
+  const [activeTab, setActiveTab] = useState('basic') // Tab state for lifestyle data
+
+  // Pre-defined scenarios for testing
+  const scenarios = {
+    healthy: {
+      name: 'Healthy Adult',
+      description: 'Low risk profile',
+      color: '#2ECC71',
+      data: {
+        gender: 'male',
+        age: 32,
+        height_cm: '175',
+        weight_kg: '70',
+        systolic_bp: '118',
+        diastolic_bp: '76',
+        HbA1c: '5.2',
+        blood_glucose: '85',
+        hdl_cholesterol: '55',
+        total_cholesterol: '180',
+        has_hypertension: false,
+        takes_cholesterol_med: false,
+        family_diabetes_history: false,
+        smoking: 'no',
+        alcohol: 'no',
+        physical_activity: '180',
+        sleep_hours: '8',
+        stress_level: 'low',
+        diet_quality: 'good'
+      }
+    },
+    prediabetic: {
+      name: 'Pre-diabetic',
+      description: 'Moderate risk profile',
+      color: '#F39C12',
+      data: {
+        gender: 'female',
+        age: 42,  // Reduced age to lower risk
+        height_cm: '165',
+        weight_kg: '73',  // Reduced weight slightly
+        systolic_bp: '128',  // Improved BP
+        diastolic_bp: '82',
+        HbA1c: '5.8',  // Lower HbA1c but still pre-diabetic
+        blood_glucose: '105',  // Improved glucose
+        hdl_cholesterol: '48',  // Better HDL
+        total_cholesterol: '210',  // Better total cholesterol
+        has_hypertension: false,
+        takes_cholesterol_med: false,
+        family_diabetes_history: true,
+        smoking: 'no',
+        alcohol: 'moderate',
+        physical_activity: '120',  // More activity
+        sleep_hours: '7',  // Better sleep
+        stress_level: 'moderate',
+        diet_quality: 'average'
+      }
+    },
+    highRisk: {
+      name: 'High Risk',
+      description: 'High risk profile',
+      color: '#E74C3C',
+      data: {
+        gender: 'male',
+        age: 50,  // Reduced age slightly
+        height_cm: '178',
+        weight_kg: '88',  // Reduced weight
+        systolic_bp: '138',  // Slightly better BP
+        diastolic_bp: '88',
+        HbA1c: '6.1',  // Lower HbA1c
+        blood_glucose: '118',  // Better glucose
+        hdl_cholesterol: '40',  // Slightly better HDL
+        total_cholesterol: '245',  // Better cholesterol
+        has_hypertension: true,
+        takes_cholesterol_med: true,
+        family_diabetes_history: true,
+        smoking: 'no',  // Changed from yes to no
+        alcohol: 'moderate',  // Changed from heavy to moderate
+        physical_activity: '60',  // More activity
+        sleep_hours: '6',  // Better sleep
+        stress_level: 'high',
+        diet_quality: 'poor'
+      }
+    },
+    diabetic: {
+      name: 'Type 2 Diabetic',
+      description: 'Very high risk profile',
+      color: '#8E44AD',
+      data: {
+        gender: 'female',
+        age: 62,
+        height_cm: '160',
+        weight_kg: '85',
+        systolic_bp: '148',
+        diastolic_bp: '95',
+        HbA1c: '7.8',
+        blood_glucose: '165',
+        hdl_cholesterol: '35',
+        total_cholesterol: '280',
+        has_hypertension: true,
+        takes_cholesterol_med: true,
+        family_diabetes_history: true,
+        smoking: 'former',
+        alcohol: 'moderate',
+        physical_activity: '20',
+        sleep_hours: '5.5',
+        stress_level: 'high',
+        diet_quality: 'poor'
+      }
+    }
+  }
 
   // Convert height ft/in to cm
   useEffect(() => {
@@ -110,6 +230,32 @@ function AnalysisPage() {
 
   const handleInputChange = (field, value) => {
     setLifestyleData(prev => ({ ...prev, [field]: value }))
+  }
+
+  // Function to apply a scenario
+  const applyScenario = (scenario) => {
+    // Calculate BMI for the scenario
+    const height = parseFloat(scenario.data.height_cm)
+    const weight = parseFloat(scenario.data.weight_kg)
+    const heightInMeters = height / 100
+    const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(1)
+
+    setLifestyleData({
+      ...scenario.data,
+      bmi: bmi,
+      ethnicity: 3, // Keep default ethnicity
+      // Clear imperial inputs since we're setting metric values
+      height_ft: '',
+      height_in: '',
+      weight_lbs: '',
+      waist_inches: '',
+      waist_circumference: ''
+    })
+
+    // Set units to metric for consistency
+    setHeightUnit('cm')
+    setWeightUnit('kg')
+    setWaistUnit('cm')
   }
 
   const handleSubmit = async () => {
@@ -224,12 +370,183 @@ function AnalysisPage() {
                 Provide your health information for accurate diabetes risk assessment.
               </p>
 
-              {/* Basic Demographics */}
-              <div className="form-section-header">
-                <User size={20} />
-                <h3>Basic Information</h3>
+              {/* Scenario Selection */}
+              <div className="scenarios-section" style={{ marginBottom: '20px' }}>
+                <button
+                  className="toggle-scenarios-btn"
+                  onClick={() => setShowScenarios(!showScenarios)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    background: 'rgba(74, 144, 226, 0.1)',
+                    border: '1px solid rgba(74, 144, 226, 0.3)',
+                    borderRadius: '8px',
+                    color: '#4A90E2',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    marginBottom: '12px',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <FlaskConical size={16} />
+                  Test Scenarios
+                  {showScenarios ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </button>
+
+                {showScenarios && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="scenarios-grid"
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                      gap: '12px',
+                      marginTop: '12px'
+                    }}
+                  >
+                    {Object.entries(scenarios).map(([key, scenario]) => (
+                      <button
+                        key={key}
+                        className="scenario-btn"
+                        onClick={() => applyScenario(scenario)}
+                        style={{
+                          padding: '12px',
+                          background: `linear-gradient(135deg, ${scenario.color}15, ${scenario.color}10)`,
+                          border: `1px solid ${scenario.color}40`,
+                          borderRadius: '8px',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease',
+                          textAlign: 'left'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)'
+                          e.currentTarget.style.borderColor = `${scenario.color}80`
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.borderColor = `${scenario.color}40`
+                        }}
+                      >
+                        <div style={{ fontWeight: '600', color: scenario.color, marginBottom: '4px' }}>
+                          {scenario.name}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666' }}>
+                          {scenario.description}
+                        </div>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
               </div>
-              <div className="form-grid">
+
+              {/* Tab Navigation */}
+              <div className="tab-navigation" style={{
+                display: 'flex',
+                gap: '10px',
+                marginBottom: '20px',
+                borderBottom: '2px solid rgba(255, 255, 255, 0.1)',
+                paddingBottom: '10px'
+              }}>
+                <button
+                  className={`tab-btn ${activeTab === 'basic' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('basic')}
+                  style={{
+                    padding: '10px 20px',
+                    background: activeTab === 'basic' ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
+                    border: activeTab === 'basic' ? '1px solid #4A90E2' : '1px solid transparent',
+                    borderRadius: '8px 8px 0 0',
+                    color: activeTab === 'basic' ? '#4A90E2' : '#aaa',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <User size={16} />
+                  Basic Info
+                </button>
+
+                <button
+                  className={`tab-btn ${activeTab === 'body' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('body')}
+                  style={{
+                    padding: '10px 20px',
+                    background: activeTab === 'body' ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
+                    border: activeTab === 'body' ? '1px solid #4A90E2' : '1px solid transparent',
+                    borderRadius: '8px 8px 0 0',
+                    color: activeTab === 'body' ? '#4A90E2' : '#aaa',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <Ruler size={16} />
+                  Body Measurements
+                </button>
+
+                <button
+                  className={`tab-btn ${activeTab === 'medical' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('medical')}
+                  style={{
+                    padding: '10px 20px',
+                    background: activeTab === 'medical' ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
+                    border: activeTab === 'medical' ? '1px solid #4A90E2' : '1px solid transparent',
+                    borderRadius: '8px 8px 0 0',
+                    color: activeTab === 'medical' ? '#4A90E2' : '#aaa',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <Heart size={16} />
+                  Medical Data
+                </button>
+
+                <button
+                  className={`tab-btn ${activeTab === 'lifestyle' ? 'active' : ''}`}
+                  onClick={() => setActiveTab('lifestyle')}
+                  style={{
+                    padding: '10px 20px',
+                    background: activeTab === 'lifestyle' ? 'rgba(74, 144, 226, 0.2)' : 'transparent',
+                    border: activeTab === 'lifestyle' ? '1px solid #4A90E2' : '1px solid transparent',
+                    borderRadius: '8px 8px 0 0',
+                    color: activeTab === 'lifestyle' ? '#4A90E2' : '#aaa',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <Coffee size={16} />
+                  Lifestyle & Habits
+                </button>
+              </div>
+
+              {/* Tab Content */}
+              <div className="tab-content">
+                {/* Basic Info Tab */}
+                {activeTab === 'basic' && (
+                  <motion.div
+                    key="basic"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
+                    <div className="form-section-header">
+                      <User size={20} />
+                      <h3>Basic Information</h3>
+                    </div>
+                <div className="form-grid">
                 <div className="form-group">
                   <label>Gender</label>
                   <select
@@ -274,8 +591,17 @@ function AnalysisPage() {
                   </select>
                 </div>
               </div>
+                  </motion.div>
+                )}
 
-              {/* Body Measurements */}
+                {/* Body Measurements Tab */}
+                {activeTab === 'body' && (
+                  <motion.div
+                    key="body"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
               <div className="form-section-header">
                 <Activity size={20} />
                 <h3>Body Measurements</h3>
@@ -423,8 +749,17 @@ function AnalysisPage() {
                   </div>
                 </div>
               </div>
+                  </motion.div>
+                )}
 
-              {/* Blood Pressure */}
+                {/* Medical Data Tab */}
+                {activeTab === 'medical' && (
+                  <motion.div
+                    key="medical"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
               <div className="form-section-header">
                 <Heart size={20} />
                 <h3>Blood Pressure</h3>
@@ -485,6 +820,23 @@ function AnalysisPage() {
 
                 <div className="form-group">
                   <label>
+                    Blood Glucose (mg/dL)
+                    <span className="info-tooltip" title="Fasting blood sugar level">
+                      <Info size={14} />
+                    </span>
+                    <span className="optional-badge">optional</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={lifestyleData.blood_glucose}
+                    onChange={(e) => handleInputChange('blood_glucose', e.target.value)}
+                    placeholder="95"
+                  />
+                  <span className="field-hint">Normal: 70-100, Pre-diabetes: 100-125, Diabetes: ≥126</span>
+                </div>
+
+                <div className="form-group">
+                  <label>
                     HDL Cholesterol (mg/dL)
                     <span className="info-tooltip" title="Good cholesterol">
                       <Info size={14} />
@@ -498,6 +850,23 @@ function AnalysisPage() {
                     placeholder="50"
                   />
                   <span className="field-hint">Higher is better (normal: 40-60)</span>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    Total Cholesterol (mg/dL)
+                    <span className="info-tooltip" title="Total cholesterol level">
+                      <Info size={14} />
+                    </span>
+                    <span className="optional-badge">optional</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={lifestyleData.total_cholesterol}
+                    onChange={(e) => handleInputChange('total_cholesterol', e.target.value)}
+                    placeholder="200"
+                  />
+                  <span className="field-hint">Desirable: &lt;200, Borderline: 200-239, High: ≥240</span>
                 </div>
               </div>
 
@@ -543,6 +912,122 @@ function AnalysisPage() {
                   </div>
                 </label>
               </div>
+                  </motion.div>
+                )}
+
+                {/* Lifestyle & Habits Tab */}
+                {activeTab === 'lifestyle' && (
+                  <motion.div
+                    key="lifestyle"
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                  >
+              <div className="form-section-header">
+                <Coffee size={20} />
+                <h3>Lifestyle & Habits</h3>
+              </div>
+              <div className="form-grid">
+                <div className="form-group">
+                  <label>
+                    <Cigarette size={16} />
+                    Smoking Status
+                  </label>
+                  <select
+                    value={lifestyleData.smoking}
+                    onChange={(e) => handleInputChange('smoking', e.target.value)}
+                    className="select-input"
+                  >
+                    <option value="no">Non-smoker</option>
+                    <option value="yes">Current smoker</option>
+                    <option value="former">Former smoker</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <Coffee size={16} />
+                    Alcohol Consumption
+                  </label>
+                  <select
+                    value={lifestyleData.alcohol}
+                    onChange={(e) => handleInputChange('alcohol', e.target.value)}
+                    className="select-input"
+                  >
+                    <option value="no">None</option>
+                    <option value="moderate">Moderate (1-2 drinks/day)</option>
+                    <option value="heavy">Heavy (3+ drinks/day)</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <Dumbbell size={16} />
+                    Physical Activity (min/week) <span className="required">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    value={lifestyleData.physical_activity}
+                    onChange={(e) => handleInputChange('physical_activity', e.target.value)}
+                    placeholder="150"
+                    required
+                  />
+                  <span className="field-hint">WHO recommends 150+ min/week</span>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <Moon size={16} />
+                    Sleep Hours (per night) <span className="required">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    step="0.5"
+                    min="3"
+                    max="12"
+                    value={lifestyleData.sleep_hours}
+                    onChange={(e) => handleInputChange('sleep_hours', e.target.value)}
+                    placeholder="7"
+                    required
+                  />
+                  <span className="field-hint">Adults need 7-9 hours</span>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <Brain size={16} />
+                    Stress Level
+                  </label>
+                  <select
+                    value={lifestyleData.stress_level}
+                    onChange={(e) => handleInputChange('stress_level', e.target.value)}
+                    className="select-input"
+                  >
+                    <option value="low">Low</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="high">High</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>
+                    <Apple size={16} />
+                    Diet Quality
+                  </label>
+                  <select
+                    value={lifestyleData.diet_quality}
+                    onChange={(e) => handleInputChange('diet_quality', e.target.value)}
+                    className="select-input"
+                  >
+                    <option value="poor">Poor (fast food, processed)</option>
+                    <option value="average">Average (mixed)</option>
+                    <option value="good">Good (balanced, healthy)</option>
+                  </select>
+                </div>
+              </div>
+                  </motion.div>
+                )}
+              </div>
 
               <div className="form-note">
                 <Info size={16} />
@@ -556,7 +1041,7 @@ function AnalysisPage() {
                 <button
                   className="next-button"
                   onClick={() => setStep(3)}
-                  disabled={!lifestyleData.age || !lifestyleData.height_cm || !lifestyleData.weight_kg}
+                  disabled={!lifestyleData.age || !lifestyleData.height_cm || !lifestyleData.weight_kg || !lifestyleData.physical_activity || !lifestyleData.sleep_hours}
                 >
                   Next
                   <ArrowRight size={20} />

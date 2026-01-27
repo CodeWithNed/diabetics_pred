@@ -28,6 +28,82 @@ class DiabetesOrchestrator(BaseAgent):
 
         logger.info("DiabetesOrchestrator initialized with all sub-agents")
 
+    def _transform_frontend_to_backend_data(self, frontend_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Transform frontend lifestyle data to match backend expectations.
+
+        Maps frontend field names to backend field names and uses actual user input
+        when available, with sensible defaults only for optional fields.
+        """
+        # Helper to safely convert boolean fields
+        def to_bool(val):
+            if isinstance(val, bool):
+                return val
+            if isinstance(val, str):
+                return val.lower() in ['true', 'yes', '1']
+            return False
+
+        # Helper to safely get numeric value with default
+        def safe_float(val, default=0):
+            try:
+                return float(val) if val != '' and val is not None else default
+            except (ValueError, TypeError):
+                return default
+
+        # Start with the direct mappings
+        backend_data = {
+            'age': frontend_data.get('age'),
+            'gender': frontend_data.get('gender', 'male'),
+            'bmi': safe_float(frontend_data.get('bmi'), 25),
+
+            # Map blood pressure fields
+            'blood_pressure_systolic': safe_float(frontend_data.get('systolic_bp'), 120),
+            'blood_pressure_diastolic': safe_float(frontend_data.get('diastolic_bp'), 80),
+
+            # Map lab results
+            'hba1c': safe_float(frontend_data.get('HbA1c'), 5.5),
+
+            # Map family history (frontend uses different field name) - must be string for model
+            'family_history': 'yes' if to_bool(frontend_data.get('family_diabetes_history', False)) else 'no',
+
+            # NEW: Direct mapping of lifestyle fields from frontend
+            'smoking': frontend_data.get('smoking', 'no'),
+            'alcohol': frontend_data.get('alcohol', 'no'),
+            'physical_activity': safe_float(frontend_data.get('physical_activity'), 30),
+            'sleep_hours': safe_float(frontend_data.get('sleep_hours'), 7),
+            'stress_level': frontend_data.get('stress_level', 'moderate'),
+            'diet_quality': frontend_data.get('diet_quality', 'average'),
+        }
+
+        # Handle blood glucose - use actual value if provided, otherwise estimate from HbA1c
+        if frontend_data.get('blood_glucose'):
+            backend_data['blood_glucose'] = safe_float(frontend_data.get('blood_glucose'), 100)
+        else:
+            # Estimate based on HbA1c if blood glucose not provided
+            hba1c = safe_float(frontend_data.get('HbA1c'), 5.5)
+            if hba1c < 5.7:
+                backend_data['blood_glucose'] = 95  # Normal
+            elif hba1c < 6.5:
+                backend_data['blood_glucose'] = 110  # Pre-diabetic range
+            else:
+                backend_data['blood_glucose'] = 140  # Diabetic range
+
+        # Handle cholesterol - prefer total cholesterol if available, otherwise estimate from HDL
+        if frontend_data.get('total_cholesterol'):
+            backend_data['cholesterol'] = safe_float(frontend_data.get('total_cholesterol'), 200)
+        elif frontend_data.get('hdl_cholesterol'):
+            # If only HDL is available, estimate total (typical ratio is 1:4)
+            hdl = safe_float(frontend_data.get('hdl_cholesterol'), 50)
+            backend_data['cholesterol'] = hdl * 4
+        else:
+            backend_data['cholesterol'] = 200  # Default normal value
+
+        logger.info(f"Transformed frontend data: {len(frontend_data)} fields -> {len(backend_data)} backend fields")
+        logger.debug(f"Using actual lifestyle data: smoking={backend_data['smoking']}, " +
+                    f"physical_activity={backend_data['physical_activity']}, " +
+                    f"sleep={backend_data['sleep_hours']}, diet={backend_data['diet_quality']}")
+        return backend_data
+
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """
         Execute the complete diabetes detection pipeline.
@@ -45,13 +121,17 @@ class DiabetesOrchestrator(BaseAgent):
             logger.info(f"Starting orchestration for task: {task.get('user_id', 'anonymous')}")
             self.log_action("orchestration_started", task.keys())
 
+            # Transform frontend data to backend format
+            original_lifestyle_data = task.get('lifestyle_data', {})
+            transformed_lifestyle_data = self._transform_frontend_to_backend_data(original_lifestyle_data)
+
             # Step 1: Parallel execution of retinal and lifestyle analysis
             logger.info("Step 1: Analyzing retinal image and lifestyle data in parallel")
             retinal_task = self.retinal_agent.execute({
                 'image': task.get('image')
             })
             lifestyle_task = self.lifestyle_agent.execute({
-                'lifestyle_data': task.get('lifestyle_data')
+                'lifestyle_data': transformed_lifestyle_data
             })
 
             retinal_result, lifestyle_result = await asyncio.gather(
@@ -78,7 +158,7 @@ class DiabetesOrchestrator(BaseAgent):
             advice_result = await self.llm_agent.execute({
                 'risk_score': fusion_result.get('risk_score'),
                 'risk_factors': fusion_result.get('risk_factors'),
-                'lifestyle_data': task.get('lifestyle_data'),
+                'lifestyle_data': transformed_lifestyle_data,  # Use transformed data
                 'retinal_findings': retinal_result.get('findings')
             })
 
@@ -88,7 +168,7 @@ class DiabetesOrchestrator(BaseAgent):
             logger.info("Step 4: Creating what-if simulations")
             simulation_result = await self.simulation_agent.execute({
                 'risk_score': fusion_result.get('risk_score'),
-                'lifestyle_data': task.get('lifestyle_data'),
+                'lifestyle_data': transformed_lifestyle_data,  # Use transformed data
                 'risk_factors': fusion_result.get('risk_factors')
             })
 

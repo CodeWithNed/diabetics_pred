@@ -4,7 +4,6 @@ import AnalysisPage from './pages/AnalysisPage'
 import ResultsPage from './pages/ResultsPage'
 import SimulationPage from './pages/SimulationPage'
 import AdvancedMetricsPage from './pages/AdvancedMetricsPage'
-import TestResultsPage from './pages/TestResultsPage'
 
 function App() {
   return (
@@ -15,7 +14,6 @@ function App() {
         <Route path="/results" element={<ResultsPage />} />
         <Route path="/simulations" element={<SimulationPage />} />
         <Route path="/advanced" element={<AdvancedMetricsPage />} />
-        <Route path="/test-results" element={<TestResultsPage />} />
       </Routes>
     </div>
   )
