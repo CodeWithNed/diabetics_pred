@@ -37,7 +37,7 @@ def analyze_retinal_image():
 
         # Validate image quality
         validation = validate_image_quality(image_bytes)
-        if not validation['valid']:
+        if not validation['is_valid']:
             return jsonify({
                 'error': 'Invalid image',
                 'details': validation

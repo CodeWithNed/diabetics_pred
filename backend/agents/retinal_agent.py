@@ -16,7 +16,7 @@ class RetinalAgent(BaseAgent):
         """Initialize retinal agent with CNN model."""
         super().__init__(agent_id="retinal_agent")
         self.model = None
-        self.version = "2.0.0-attention"
+        self.version = "1.0.0-cnn"
 
         # Load model on initialization
         self.model_loaded = False
@@ -32,23 +32,39 @@ class RetinalAgent(BaseAgent):
         """Load retinal model directly from weights file."""
         from tensorflow import keras
 
-        # Path to high-accuracy model with retina_weights.best.hdf5
-        model_path = Path(__file__).parent.parent / 'models' / 'retinal' / 'weights' / 'retina_attention_model.h5'
+        # Path to cnn_model_1.h5 - best performing model
+        model_path = Path(__file__).parent.parent / 'models' / 'retinal' / 'weights' / 'cnn_model_1.h5'
 
         if not model_path.exists():
-            # Fallback to cnn_model_1.h5
-            logger.warning("retina_attention_model.h5 not found, trying cnn_model_1.h5")
-            model_path = model_path.parent / 'cnn_model_1.h5'
+            # Try retina_attention_model.h5
+            logger.warning("cnn_model_1.h5 not found, trying retina_attention_model.h5")
+            model_path = model_path.parent / 'retina_attention_model.h5'
+
+        if not model_path.exists():
+            # Try full_retina_model.h5
+            logger.warning("retina_attention_model.h5 not found, trying full_retina_model.h5")
+            model_path = model_path.parent / 'full_retina_model.h5'
 
         if not model_path.exists():
             raise FileNotFoundError(f"No retinal model found at {model_path}")
 
         logger.info(f"Loading retinal model from: {model_path.name}")
-        self.model = keras.models.load_model(
-            str(model_path),
-            compile=False,
-            safe_mode=False
-        )
+
+        # Handle different models differently
+        if 'full_retina_model' in model_path.name:
+            # Enable unsafe deserialization for full_retina_model (contains Lambda layers)
+            keras.config.enable_unsafe_deserialization()
+            self.model = keras.models.load_model(
+                str(model_path),
+                compile=False
+            )
+        else:
+            # Normal loading for other models
+            self.model = keras.models.load_model(
+                str(model_path),
+                compile=False,
+                safe_mode=False
+            )
 
         logger.info(f"Model loaded: {model_path.name} (input: {self.model.input_shape}, output: {self.model.output_shape})")
 

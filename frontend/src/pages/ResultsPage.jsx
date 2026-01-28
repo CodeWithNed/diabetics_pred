@@ -24,9 +24,19 @@ function ResultsPage() {
     )
   }
 
+  // Function to calculate risk level based on score thresholds
+  const calculateRiskLevel = (score) => {
+    const percentage = score * 100
+    if (percentage > 80) return 'very_high'
+    if (percentage > 60) return 'high'
+    if (percentage > 40) return 'moderate'
+    return 'low'
+  }
+
   const { risk_assessment = {}, personalized_advice = {}, what_if_simulations = [] } = results || {}
   const overallRisk = risk_assessment?.overall_risk_score || 0.5
-  const riskLevel = risk_assessment?.risk_level || 'moderate'
+  // Use calculated risk level based on new thresholds
+  const riskLevel = calculateRiskLevel(overallRisk)
 
   // Filter out ONLY empty lines and markdown formatting - keep all actual recommendations
   const filteredRecommendations = (personalized_advice.recommendations || [])
@@ -64,8 +74,8 @@ function ResultsPage() {
       'mild': 'Mild Risk',
       'moderate': 'Moderate Risk',
       'severe': 'Severe Risk',
-      'proliferative': 'Proliferative DR',
-      'non-proliferative': 'Non-Proliferative DR'
+      'proliferative': 'Proliferative Risk',
+      'non-proliferative': 'Non-Proliferative Risk'
     }
 
     // Handle both lowercase and mixed case inputs

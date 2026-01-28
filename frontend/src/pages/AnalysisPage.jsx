@@ -1161,6 +1161,55 @@ function AnalysisPage() {
                     </div>
                   </div>
                 </div>
+
+                <div className="review-card">
+                  <h3>Lifestyle & Habits</h3>
+                  <div className="review-data">
+                    <div className="review-item">
+                      <span>Smoking:</span>
+                      <strong className={lifestyleData.smoking !== 'no' ? 'text-warning' : 'text-success'}>
+                        {lifestyleData.smoking === 'no' ? 'Non-smoker' :
+                         lifestyleData.smoking === 'yes' ? 'Current smoker' : 'Former smoker'}
+                      </strong>
+                    </div>
+                    <div className="review-item">
+                      <span>Alcohol:</span>
+                      <strong className={lifestyleData.alcohol === 'heavy' ? 'text-warning' :
+                                       lifestyleData.alcohol === 'no' ? 'text-success' : ''}>
+                        {lifestyleData.alcohol === 'no' ? 'None' :
+                         lifestyleData.alcohol === 'moderate' ? 'Moderate' : 'Heavy'}
+                      </strong>
+                    </div>
+                    <div className="review-item">
+                      <span>Physical Activity:</span>
+                      <strong className={parseInt(lifestyleData.physical_activity) < 150 ? 'text-warning' : 'text-success'}>
+                        {lifestyleData.physical_activity || 0} min/week
+                      </strong>
+                    </div>
+                    <div className="review-item">
+                      <span>Sleep:</span>
+                      <strong className={parseFloat(lifestyleData.sleep_hours) < 7 || parseFloat(lifestyleData.sleep_hours) > 9 ? 'text-warning' : 'text-success'}>
+                        {lifestyleData.sleep_hours || 0} hours/night
+                      </strong>
+                    </div>
+                    <div className="review-item">
+                      <span>Stress Level:</span>
+                      <strong className={lifestyleData.stress_level === 'high' ? 'text-warning' :
+                                       lifestyleData.stress_level === 'low' ? 'text-success' : ''}>
+                        {lifestyleData.stress_level === 'low' ? 'Low' :
+                         lifestyleData.stress_level === 'moderate' ? 'Moderate' : 'High'}
+                      </strong>
+                    </div>
+                    <div className="review-item">
+                      <span>Diet Quality:</span>
+                      <strong className={lifestyleData.diet_quality === 'poor' ? 'text-warning' :
+                                       lifestyleData.diet_quality === 'good' ? 'text-success' : ''}>
+                        {lifestyleData.diet_quality === 'poor' ? 'Poor' :
+                         lifestyleData.diet_quality === 'average' ? 'Average' : 'Good'}
+                      </strong>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="button-group">
