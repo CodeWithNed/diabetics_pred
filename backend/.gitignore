@@ -1,43 +1,8 @@
 # Python
 __pycache__/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
 
 # Virtual Environment
 venv/
-env/
-ENV/
-.venv
-
-# Environment variables
-.env.local
-.env.*.local
 
 # IDE
-.vscode/
 .idea/
-*.swp
-*.swo
-*~
-
-# Uploaded files
-uploads/*
-!uploads/.gitkeep
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Jupyter
-.ipynb_checkpoints
-
-# Temporary files
-*.tmp
-*.bak
