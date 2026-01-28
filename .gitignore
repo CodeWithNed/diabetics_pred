@@ -142,10 +142,7 @@ cython_debug/
 .vscode/
 *.code-workspace
 
-data/datasets/
-
-
-
+/data/datasets/
 
 # OS files
 .DS_Store
