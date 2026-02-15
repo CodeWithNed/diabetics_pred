@@ -37,6 +37,13 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
+OR
+
+```bash
+cd backend
+docker build -t diabetics-pred-backend . 
+docker run -p 5000:5000 --name diabetics-backend diabetics-pred-backend                                                                                                                                                        │
+```
 
 ### 2. Configure Environment
 
