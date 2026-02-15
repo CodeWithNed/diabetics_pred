@@ -33,29 +33,99 @@ class LifestyleAgent(BaseAgent):
         """Load lifestyle model and preprocessors directly from weight files."""
         weights_dir = Path(__file__).parent.parent / 'models' / 'lifestyle' / 'weights'
 
+        logger.info("=" * 80)
+        logger.info("LIFESTYLE MODEL LOADING")
+        logger.info("=" * 80)
+
         # Load main model (from notebook export)
         model_path = weights_dir / 'gradient_boosting_model.pkl'
         if not model_path.exists():
             raise FileNotFoundError(f"Model not found: {model_path}")
 
         self.model = joblib.load(model_path)
-        logger.info(f"Loaded Gradient Boosting model from {model_path.name}")
+        logger.info(f"✓ Loaded Gradient Boosting model from {model_path.name}")
+        logger.info(f"  Full path: {model_path}")
+
+        # Get model details
+        model_type = type(self.model).__name__
+        n_estimators = getattr(self.model, 'n_estimators', 'N/A')
+        n_features = getattr(self.model, 'n_features_in_', 'N/A')
+
+        logger.info(f"  Model type: {model_type}")
+        logger.info(f"  Number of estimators: {n_estimators}")
+        logger.info(f"  Number of features: {n_features}")
 
         # Load scaler (from notebook export)
         scaler_path = weights_dir / 'scaler.pkl'
         if scaler_path.exists():
             self.scaler = joblib.load(scaler_path)
-            logger.info(f"Loaded scaler from {scaler_path.name}")
+            logger.info(f"✓ Loaded scaler from {scaler_path.name}")
         else:
-            logger.warning("Scaler not found, predictions may be inaccurate")
+            logger.warning("⚠ Scaler not found, predictions may be inaccurate")
 
         # Load imputer (from notebook export)
         imputer_path = weights_dir / 'imputer.pkl'
         if imputer_path.exists():
             self.imputer = joblib.load(imputer_path)
-            logger.info(f"Loaded imputer from {imputer_path.name}")
+            logger.info(f"✓ Loaded imputer from {imputer_path.name}")
         else:
-            logger.warning("Imputer not found")
+            logger.warning("⚠ Imputer not found")
+
+        logger.info("")
+        logger.info("API ENDPOINTS TO CALL THIS MODEL:")
+        logger.info("  POST /api/lifestyle/predict")
+        logger.info("")
+        logger.info("REQUEST FORMAT:")
+        logger.info("  Content-Type: application/json")
+        logger.info("  Body: { ...features... } (JSON object with features directly)")
+        logger.info("")
+        logger.info("REQUIRED INPUT FEATURES (16 total):")
+        logger.info("  Numeric:")
+        logger.info("    - age: Patient age (years)")
+        logger.info("    - bmi: Body Mass Index")
+        logger.info("    - hba1c: HbA1c level (%)")
+        logger.info("    - blood_glucose: Blood glucose level (mg/dL)")
+        logger.info("    - blood_pressure_systolic: Systolic BP (mmHg)")
+        logger.info("    - blood_pressure_diastolic: Diastolic BP (mmHg)")
+        logger.info("    - cholesterol: Total cholesterol (mg/dL)")
+        logger.info("    - physical_activity: Minutes per week")
+        logger.info("    - sleep_hours: Hours per night")
+        logger.info("  Categorical:")
+        logger.info("    - gender: 'male' or 'female'")
+        logger.info("    - smoking: 'yes' or 'no'")
+        logger.info("    - alcohol: 'no', 'moderate', or 'heavy'")
+        logger.info("    - family_history: 'yes' or 'no'")
+        logger.info("    - stress_level: 'low', 'moderate', or 'high'")
+        logger.info("    - diet_quality: 'poor', 'average', or 'good'")
+        logger.info("  Computed:")
+        logger.info("    - bmi_age_interaction: (bmi * age) / 100")
+        logger.info("")
+        logger.info("MODEL OUTPUT:")
+        logger.info("  - risk_score: Calibrated diabetes risk [0-1]")
+        logger.info("  - risk_probability: Same as risk_score")
+        logger.info("  - raw_probability: Uncalibrated model output")
+        logger.info("  - confidence: Prediction confidence")
+        logger.info("  - key_factors: Top 5 contributing risk factors")
+        logger.info("")
+        logger.info("PREPROCESSING PIPELINE:")
+        logger.info("  1. Feature engineering (compute bmi_age_interaction)")
+        logger.info("  2. Missing value imputation (numeric features)")
+        logger.info("  3. Standard scaling (normalize features)")
+        logger.info("  4. Gradient Boosting prediction")
+        logger.info("  5. Probability calibration (maps [0.4,1.0] → [0.0,1.0])")
+        logger.info("")
+        logger.info("EXAMPLE cURL:")
+        logger.info('  curl -X POST http://localhost:5000/api/lifestyle/predict \\')
+        logger.info('       -H "Content-Type: application/json" \\')
+        logger.info('       -d \'{"age": 45, "gender": "male", "bmi": 28.5,')
+        logger.info('            "hba1c": 6.2, "blood_glucose": 110,')
+        logger.info('            "blood_pressure_systolic": 130,')
+        logger.info('            "blood_pressure_diastolic": 85,')
+        logger.info('            "cholesterol": 220, "smoking": "no",')
+        logger.info('            "alcohol": "moderate", "physical_activity": 150,')
+        logger.info('            "family_history": "yes", "sleep_hours": 7,')
+        logger.info('            "stress_level": "moderate", "diet_quality": "average"}\'')
+        logger.info("=" * 80)
 
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """

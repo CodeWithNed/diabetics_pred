@@ -48,7 +48,11 @@ class RetinalAgent(BaseAgent):
         if not model_path.exists():
             raise FileNotFoundError(f"No retinal model found at {model_path}")
 
+        logger.info("=" * 80)
+        logger.info("RETINAL MODEL LOADING")
+        logger.info("=" * 80)
         logger.info(f"Loading retinal model from: {model_path.name}")
+        logger.info(f"Full path: {model_path}")
 
         # Handle different models differently
         if 'full_retina_model' in model_path.name:
@@ -66,7 +70,42 @@ class RetinalAgent(BaseAgent):
                 safe_mode=False
             )
 
-        logger.info(f"Model loaded: {model_path.name} (input: {self.model.input_shape}, output: {self.model.output_shape})")
+        # Log detailed model information
+        logger.info(f"✓ Model loaded successfully: {model_path.name}")
+        logger.info(f"  Architecture: CNN (Convolutional Neural Network)")
+        logger.info(f"  Input shape: {self.model.input_shape}")
+        logger.info(f"  Output shape: {self.model.output_shape}")
+        logger.info(f"  Total layers: {len(self.model.layers)}")
+
+        # Count trainable parameters
+        trainable_params = sum([keras.backend.count_params(w) for w in self.model.trainable_weights])
+        logger.info(f"  Trainable parameters: {trainable_params:,}")
+
+        logger.info("")
+        logger.info("API ENDPOINTS TO CALL THIS MODEL:")
+        logger.info("  POST /api/retinal/analyze")
+        logger.info("")
+        logger.info("REQUEST FORMAT:")
+        logger.info("  Content-Type: multipart/form-data")
+        logger.info("  Body: { \"image\": <retinal_image_file> }")
+        logger.info("  Supported formats: JPG, PNG, BMP")
+        logger.info("  Image preprocessing: Resized to 224x224, normalized to [0,1]")
+        logger.info("")
+        logger.info("EXPECTED INPUT:")
+        logger.info("  - Retinal fundus image (color)")
+        logger.info("  - Resolution: 224x224 pixels (auto-resized)")
+        logger.info("  - Channels: 3 (RGB)")
+        logger.info("")
+        logger.info("MODEL OUTPUT:")
+        logger.info("  - 5 class probabilities: [No DR, Mild, Moderate, Severe, Proliferative]")
+        logger.info("  - DR probability (1 - P(No DR))")
+        logger.info("  - Severity classification")
+        logger.info("  - Confidence score")
+        logger.info("")
+        logger.info("EXAMPLE cURL:")
+        logger.info('  curl -X POST http://localhost:5000/api/retinal/analyze \\')
+        logger.info('       -F "image=@/path/to/retinal_image.jpg"')
+        logger.info("=" * 80)
 
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """

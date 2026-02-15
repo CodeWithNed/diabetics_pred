@@ -5,12 +5,12 @@ python-dotenv
 
 # AI/ML Libraries (essential only - remove unused)
 scikit-learn
-tensorflow
-keras
+tensorflow== 2.20.0
+keras==3.13.1
 xgboost
 opencv-python
 pillow
-numpy
+numpy==2.2.6
 pandas
 joblib
 
