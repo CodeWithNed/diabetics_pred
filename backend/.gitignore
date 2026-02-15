@@ -4,5 +4,8 @@ __pycache__/
 # Virtual Environment
 venv/
 
+# Environment variables
+.env
+
 # IDE
 .idea/
