@@ -1,390 +1,322 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { AlertCircle, CheckCircle, Eye, Activity, TrendingDown, Zap, ArrowRight, ArrowLeft, Home, MessageCircle, X, Send } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Eye, TrendingUp, Calendar, Target, AlertCircle, Activity, ArrowRight, CheckCircle, Sparkles, TrendingDown } from 'lucide-react'
+import Navigation from '../components/Navigation'
+import { getMyResults, getResultsSummary } from '../services/results'
+import { getPrimaryPlan } from '../services/plans'
 import './ResultsPage.css'
 
 function ResultsPage() {
-  const location = useLocation()
+  const [results, setResults] = useState([])
+  const [summary, setSummary] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [selectedResult, setSelectedResult] = useState(null)
+  const [currentResult, setCurrentResult] = useState(null)
+  const [hasPlan, setHasPlan] = useState(false)
   const navigate = useNavigate()
-  const results = location.state?.results
-  const [chatOpen, setChatOpen] = useState(false)
-  const [selectedRecommendation, setSelectedRecommendation] = useState(null)
-  const [chatMessages, setChatMessages] = useState([])
-  const [userInput, setUserInput] = useState('')
-  const [chatLoading, setChatLoading] = useState(false)
+  const location = useLocation()
 
-  if (!results || results.status === 'error') {
-    return (
-      <div className="error-state">
-        <h2>Analysis Failed</h2>
-        <p>{results?.error || 'No results available'}</p>
-        <button onClick={() => navigate('/analyze')}>Try Again</button>
-      </div>
-    )
-  }
+  // Check if coming from fresh analysis
+  const justCompleted = location.state?.justCompleted
+  const passedResults = location.state?.results
 
-  // Function to calculate risk level based on score thresholds
-  const calculateRiskLevel = (score) => {
-    const percentage = score * 100
-    if (percentage > 80) return 'very_high'
-    if (percentage > 60) return 'high'
-    if (percentage > 40) return 'moderate'
-    return 'low'
-  }
+  useEffect(() => {
+    loadResults()
+  }, [])
 
-  const { risk_assessment = {}, personalized_advice = {}, what_if_simulations = [] } = results || {}
-  const overallRisk = risk_assessment?.overall_risk_score || 0.5
-  // Use calculated risk level based on new thresholds
-  const riskLevel = calculateRiskLevel(overallRisk)
+  const loadResults = async () => {
+    try {
+      // If coming from analysis with fresh results, use those
+      if (passedResults) {
+        setCurrentResult(passedResults)
+      }
 
-  // Filter out ONLY empty lines and markdown formatting - keep all actual recommendations
-  const filteredRecommendations = (personalized_advice.recommendations || [])
-    .filter(rec => rec && rec.trim().length > 0)  // Remove completely empty
-    .filter(rec => !rec.startsWith('#'))  // Remove markdown headers
-    .filter(rec => !rec.startsWith('|'))  // Remove markdown tables
-    .filter(rec => !rec.match(/^[\d.]+$/))  // Remove lone numbers
-    .map(rec => rec.replace(/^\d+\.\s*/, '').replace(/^[-•*]\s*/, '').trim())  // Clean bullets
-    .filter(rec => rec.length > 10)  // Remove very short items
+      // Also load historical results from database
+      const [resultsData, summaryData, planCheck] = await Promise.allSettled([
+        getMyResults(1, 20),
+        getResultsSummary(),
+        getPrimaryPlan()
+      ])
 
-  const getRiskColor = (level) => {
-    const colors = {
-      low: '#2ECC71',
-      moderate: '#F39C12',
-      high: '#E85D75',
-      very_high: '#FF6B6B'
+      if (resultsData.status === 'fulfilled') {
+        setResults(resultsData.value.results || [])
+        // If no current result, use latest from database
+        if (!passedResults && resultsData.value.results?.length > 0) {
+          setSelectedResult(resultsData.value.results[0])
+        }
+      }
+
+      if (summaryData.status === 'fulfilled') {
+        setSummary(summaryData.value)
+      }
+
+      if (planCheck.status === 'fulfilled') {
+        setHasPlan(true)
+      }
+
+    } catch (error) {
+      console.error('Error loading results:', error)
+    } finally {
+      setLoading(false)
     }
-    return colors[level] || '#718096'
   }
 
-  const getRiskLabel = (level) => {
+  const getRiskColor = (risk) => {
+    if (risk < 25) return '#4CAF50'
+    if (risk < 50) return '#FF9800'
+    if (risk < 75) return '#FF5722'
+    return '#F44336'
+  }
+
+  const getRiskLabel = (category) => {
     const labels = {
       low: 'Low Risk',
       moderate: 'Moderate Risk',
       high: 'High Risk',
       very_high: 'Very High Risk'
     }
-    return labels[level] || 'Unknown'
+    return labels[category] || 'Unknown'
   }
 
-  const getDRSeverityLabel = (severity) => {
-    if (!severity) return 'Detected'
-
-    const severityMap = {
-      'mild': 'Mild Risk',
-      'moderate': 'Moderate Risk',
-      'severe': 'Severe Risk',
-      'proliferative': 'Proliferative Risk',
-      'non-proliferative': 'Non-Proliferative Risk'
-    }
-
-    // Handle both lowercase and mixed case inputs
-    const normalized = severity.toLowerCase()
-    return severityMap[normalized] || severity
+  if (loading) {
+    return (
+      <>
+        <Navigation />
+        <div className="results-page">
+          <div className="loading">
+            <TrendingUp className="loading-icon" />
+            <p>Loading your results...</p>
+          </div>
+        </div>
+      </>
+    )
   }
 
-  const openChat = (recommendation, index) => {
-    setSelectedRecommendation({ text: recommendation, index })
-    setChatMessages([
-      {
-        type: 'ai',
-        text: `I can help you understand and implement this recommendation better. What would you like to know?`
+  // Use fresh results if available, otherwise use database results
+  const displayResult = currentResult || selectedResult
+
+  if (!displayResult && results.length === 0 && !loading) {
+    return (
+      <>
+        <Navigation />
+        <div className="results-page">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="no-results-state"
+          >
+            <AlertCircle size={64} color="#999" />
+            <h2>No Analysis Results Yet</h2>
+            <p>Complete your first health assessment to see results here</p>
+            <button className="cta-button" onClick={() => navigate('/analyze')}>
+              Start Analysis
+            </button>
+          </motion.div>
+        </div>
+      </>
+    )
+  }
+
+  // Extract data from either fresh or saved results
+  const getRiskData = () => {
+    if (currentResult) {
+      // Fresh from analysis
+      return {
+        combined_risk: currentResult.final_risk || currentResult.risk_score || 0,
+        retinal_risk: currentResult.retinal_analysis?.risk_score || 0,
+        lifestyle_risk: currentResult.lifestyle_prediction?.risk_score || 0,
+        recommendations: currentResult.recommendations || [],
+        risk_assessment: currentResult.risk_assessment
       }
-    ])
-    setChatOpen(true)
+    } else if (displayResult) {
+      // From database
+      return {
+        combined_risk: displayResult.combined_risk || 0,
+        retinal_risk: displayResult.retinal_risk || 0,
+        lifestyle_risk: displayResult.lifestyle_risk || 0,
+        recommendations: displayResult.recommendations || [],
+        risk_category: displayResult.risk_category
+      }
+    }
+    return {}
   }
 
-  const sendMessage = async () => {
-    if (!userInput.trim()) return
-
-    const userMessage = userInput
-    setUserInput('')
-    setChatMessages(prev => [...prev, { type: 'user', text: userMessage }])
-    setChatLoading(true)
-
-    // Simulate AI response (replace with actual API call)
-    setTimeout(() => {
-      setChatMessages(prev => [...prev, {
-        type: 'ai',
-        text: `Here's more detail about "${selectedRecommendation.text.substring(0, 50)}...": ${userMessage}. This is a personalized response based on your question.`
-      }])
-      setChatLoading(false)
-    }, 1000)
-  }
+  const riskData = getRiskData()
 
   return (
-    <div className="results-page">
-      <div className="container results-container">
-        {/* Page Header with Navigation */}
-        <div className="page-nav">
-          <button className="nav-back-btn" onClick={() => navigate('/analyze')}>
-            <ArrowLeft size={18} />
-            New Analysis
-          </button>
-          <button className="nav-home-btn" onClick={() => navigate('/')}>
-            <Home size={18} />
-            Home
-          </button>
-        </div>
-
-        {/* Risk Score Display */}
+    <>
+      <Navigation />
+      <div className="results-page">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="risk-display glass"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="results-content"
         >
-          <div className="risk-header">
-            <h2>Your Risk Assessment</h2>
-            <div className="scan-indicator">
-              <span className="pulse-dot"></span>
-              <span>Analysis Complete</span>
-            </div>
-          </div>
-
-          <div className="risk-score-container">
-            <div className="risk-circle" style={{ '--risk-percent': `${overallRisk * 100}%` }}>
-              <svg viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="90" className="risk-track" />
-                <circle cx="100" cy="100" r="90" className="risk-progress" style={{ stroke: getRiskColor(riskLevel) }} />
-              </svg>
-              <div className="risk-score-value">
-                <span className="score">{(overallRisk * 100).toFixed(1)}</span>
-                <span className="score-label">Risk Score</span>
+          {/* Success Banner for Fresh Analysis */}
+          {justCompleted && (
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="completion-banner"
+            >
+              <CheckCircle size={32} />
+              <div>
+                <h3>Analysis Complete!</h3>
+                <p>Your results have been saved and analyzed</p>
               </div>
+            </motion.div>
+          )}
+
+          {/* Header with Summary */}
+          <div className="results-header">
+            <div className="header-text">
+              <h1>{justCompleted ? 'Your Results' : 'Analysis History'}</h1>
+              <p>{justCompleted ? 'Review your diabetes risk assessment' : `${results.length} total ${results.length === 1 ? 'analysis' : 'analyses'} completed`}</p>
             </div>
 
-            <div className="risk-level-badge" style={{ background: getRiskColor(riskLevel) + '20', color: getRiskColor(riskLevel) }}>
-              {getRiskLabel(riskLevel)}
+            {summary?.risk_trend && !justCompleted && (
+              <div className="trend-badge" style={{
+                backgroundColor: summary.risk_trend === 'improving' ? '#e8f5e9' : summary.risk_trend === 'worsening' ? '#ffebee' : '#f5f5f5',
+                color: summary.risk_trend === 'improving' ? '#2e7d32' : summary.risk_trend === 'worsening' ? '#c62828' : '#666'
+              }}>
+                {summary.risk_trend === 'improving' ? '📈 Risk Improving' :
+                 summary.risk_trend === 'worsening' ? '📉 Risk Increasing' :
+                 '➡️ Risk Stable'}
+              </div>
+            )}
+          </div>
+
+          <div className="results-layout">
+            {/* Results List */}
+            <div className="results-list">
+              <h3>Analysis History</h3>
+              {results.map((result, idx) => (
+                <motion.div
+                  key={result.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className={`result-item ${selectedResult?.id === result.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedResult(result)}
+                >
+                  <div className="result-date">
+                    <Calendar size={16} />
+                    {new Date(result.analysis_date).toLocaleDateString()}
+                  </div>
+                  <div className="result-score" style={{ color: getRiskColor(result.combined_risk) }}>
+                    {result.combined_risk?.toFixed(1)}%
+                  </div>
+                  <div className="result-category" style={{
+                    backgroundColor: `${getRiskColor(result.combined_risk)}20`,
+                    color: getRiskColor(result.combined_risk)
+                  }}>
+                    {getRiskLabel(result.risk_category)}
+                  </div>
+                </motion.div>
+              ))}
             </div>
-          </div>
-        </motion.div>
 
-        {/* Quick Summary Cards */}
-        <div className="summary-grid">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="summary-card glass"
-          >
-            <Eye size={24} className="summary-icon" />
-            <span className="summary-label">Retinal Scan</span>
-            <strong className={risk_assessment?.retinal_analysis?.dr_detected ? 'text-warning' : 'text-success'}>
-              {risk_assessment?.retinal_analysis?.dr_detected ?
-                getDRSeverityLabel(risk_assessment?.retinal_analysis?.severity) :
-                'No DR Detected'}
-            </strong>
-          </motion.div>
+            {/* Main Result Display */}
+            {displayResult && (
+              <div className="result-detail">
+                {/* Risk Score Display */}
+                <div className="risk-visualization">
+                  <svg className="progress-ring" width="200" height="200">
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="80"
+                      fill="none"
+                      stroke="#f0f0f0"
+                      strokeWidth="16"
+                    />
+                    <circle
+                      cx="100"
+                      cy="100"
+                      r="80"
+                      fill="none"
+                      stroke={getRiskColor(riskData.combined_risk)}
+                      strokeWidth="16"
+                      strokeDasharray={`${2 * Math.PI * 80}`}
+                      strokeDashoffset={`${2 * Math.PI * 80 * (1 - riskData.combined_risk / 100)}`}
+                      transform="rotate(-90 100 100)"
+                      style={{ transition: 'stroke-dashoffset 0.8s ease' }}
+                    />
+                    <text x="100" y="95" textAnchor="middle" fontSize="36" fontWeight="700" fill={getRiskColor(riskData.combined_risk)}>
+                      {riskData.combined_risk?.toFixed(1)}%
+                    </text>
+                    <text x="100" y="115" textAnchor="middle" fontSize="14" fill="#999">
+                      Risk Score
+                    </text>
+                  </svg>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="summary-card glass"
-          >
-            <Activity size={24} className="summary-icon" />
-            <span className="summary-label">Lifestyle Risk</span>
-            <strong>
-              {risk_assessment?.lifestyle_analysis?.risk_score ?
-                `${(risk_assessment?.lifestyle_analysis?.risk_score * 100).toFixed(0)}%` :
-                'Low'}
-            </strong>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="summary-card glass"
-          >
-            <Zap size={24} className="summary-icon" />
-            <span className="summary-label">Overall</span>
-            <strong style={{ color: getRiskColor(riskLevel) }}>
-              {getRiskLabel(riskLevel)}
-            </strong>
-          </motion.div>
-        </div>
-
-        {/* AI Recommendations */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="recommendations-section glass"
-        >
-          <div className="recommendations-header">
-            <h2>
-              <Zap size={24} />
-              Your Personalized Action Plan
-            </h2>
-            <p className="recommendations-subtitle">
-              AI-generated recommendations based on your analysis
-            </p>
-          </div>
-
-          <div className="recommendations-list">
-            {filteredRecommendations.length > 0 ? (
-              filteredRecommendations.map((rec, idx) => {
-                // Try to split on common patterns: "because", "Why:", "This helps", etc.
-                let action = rec
-                let reason = ''
-
-                const patterns = [
-                  { split: ' because ', prefix: 'Because ' },
-                  { split: ' as ', prefix: 'As ' },
-                  { split: '. This ', prefix: 'This ' },
-                  { split: ' since ', prefix: 'Since ' },
-                  { split: ' to help ', prefix: 'To help ' },
-                  { split: '. Why: ', prefix: '' },
-                  { split: ' - ', prefix: '' }
-                ]
-
-                for (const pattern of patterns) {
-                  if (rec.toLowerCase().includes(pattern.split.toLowerCase())) {
-                    const parts = rec.split(new RegExp(pattern.split, 'i'))
-                    if (parts.length >= 2) {
-                      action = parts[0].trim()
-                      reason = pattern.prefix + parts.slice(1).join(pattern.split).trim()
-                      break
-                    }
-                  }
-                }
-
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.4 + (idx * 0.05) }}
-                    className="recommendation-card"
-                  >
-                    <div className="rec-icon">{idx + 1}</div>
-                    <div className="rec-content">
-                      <div className="rec-action">{action}</div>
-                      {reason && <div className="rec-reason">{reason}</div>}
+                  <div className="risk-breakdown">
+                    <div className="risk-component">
+                      <Eye size={20} />
+                      <div>
+                        <span className="component-label">Retinal Analysis</span>
+                        <span className="component-value">{riskData.retinal_risk?.toFixed(1)}%</span>
+                      </div>
                     </div>
-                    <button
-                      className="chat-btn"
-                      onClick={() => openChat(rec, idx)}
-                      title="Ask AI for more details"
-                    >
-                      <MessageCircle size={18} />
+                    <div className="risk-component">
+                      <Activity size={20} />
+                      <div>
+                        <span className="component-label">Lifestyle Assessment</span>
+                        <span className="component-value">{riskData.lifestyle_risk?.toFixed(1)}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Recommendations */}
+                {riskData.recommendations && riskData.recommendations.length > 0 && (
+                  <div className="recommendations-section">
+                    <h4>Personalized Recommendations</h4>
+                    <div className="recommendations-list">
+                      {riskData.recommendations.slice(0, 5).map((rec, idx) => (
+                        <div key={idx} className="recommendation-item">
+                          <span className="rec-bullet">•</span>
+                          <p>{rec}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Next Steps - Prominent CTA */}
+                <div className="next-steps-section">
+                  <h3>What's Next?</h3>
+                  <p>Now that you have your results, it's time to take action</p>
+
+                  {!hasPlan && justCompleted ? (
+                    <button className="continue-btn primary-cta" onClick={() => navigate('/plans')}>
+                      Choose Your Health Plan
+                      <ArrowRight size={20} />
                     </button>
-                  </motion.div>
-                )
-              })
-            ) : (
-              <div className="loading-state">
-                <div className="spinner-small"></div>
-                <p>Generating personalized recommendations...</p>
+                  ) : (
+                    <div className="action-buttons">
+                      <button className="action-btn primary" onClick={() => navigate('/plans')}>
+                        <Target size={18} />
+                        View Health Plans
+                      </button>
+                      <button className="action-btn" onClick={() => navigate('/simulations')}>
+                        <Sparkles size={18} />
+                        What-If Scenarios
+                      </button>
+                      <button className="action-btn" onClick={() => navigate('/dashboard')}>
+                        <Activity size={18} />
+                        Go to Dashboard
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
         </motion.div>
-
-        {/* Navigation Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="navigation-actions"
-        >
-          <button
-            className="action-button primary"
-            onClick={() => navigate('/simulations', { state: { results } })}
-          >
-            <TrendingDown size={22} />
-            <div className="button-content">
-              <span className="button-title">What-If Scenarios</span>
-              <span className="button-subtitle">See how changes reduce your risk</span>
-            </div>
-            <ArrowRight size={20} />
-          </button>
-
-          <button
-            className="action-button secondary"
-            onClick={() => navigate('/advanced', { state: { results } })}
-          >
-            <Zap size={22} />
-            <div className="button-content">
-              <span className="button-title">ML Metrics</span>
-              <span className="button-subtitle">Technical analysis & model details</span>
-            </div>
-            <ArrowRight size={20} />
-          </button>
-        </motion.div>
-
-        {/* Chat Modal */}
-        <AnimatePresence>
-          {chatOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="chat-overlay"
-              onClick={() => setChatOpen(false)}
-            >
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 50 }}
-                className="chat-modal"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="chat-header">
-                  <div>
-                    <h3>Ask AI About This Recommendation</h3>
-                    <p className="chat-subtitle">#{selectedRecommendation?.index + 1}: {selectedRecommendation?.text.substring(0, 60)}...</p>
-                  </div>
-                  <button className="close-chat" onClick={() => setChatOpen(false)}>
-                    <X size={20} />
-                  </button>
-                </div>
-
-                <div className="chat-messages">
-                  {chatMessages.map((msg, idx) => (
-                    <div key={idx} className={`chat-message ${msg.type}`}>
-                      <div className="message-bubble">
-                        {msg.text}
-                      </div>
-                    </div>
-                  ))}
-                  {chatLoading && (
-                    <div className="chat-message ai">
-                      <div className="message-bubble">
-                        <div className="typing-indicator">
-                          <span></span>
-                          <span></span>
-                          <span></span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="chat-input-container">
-                  <input
-                    type="text"
-                    value={userInput}
-                    onChange={(e) => setUserInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-                    placeholder="Ask for clarification, steps, or tips..."
-                    className="chat-input"
-                  />
-                  <button
-                    className="send-btn"
-                    onClick={sendMessage}
-                    disabled={!userInput.trim() || chatLoading}
-                  >
-                    <Send size={18} />
-                  </button>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
-    </div>
+    </>
   )
 }
 

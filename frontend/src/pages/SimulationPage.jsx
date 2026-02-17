@@ -1,219 +1,267 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { TrendingDown, Zap, Calendar, Target, ArrowLeft, Home } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { TrendingDown, Target, AlertCircle, Activity, Sparkles } from 'lucide-react'
+import Navigation from '../components/Navigation'
+import { getPrimaryPlan } from '../services/plans'
+import { getLatestResult } from '../services/results'
+import { createSimulations } from '../services/api'
 import './SimulationPage.css'
 
 function SimulationPage() {
-  const location = useLocation()
+  const [plan, setPlan] = useState(null)
+  const [latestResult, setLatestResult] = useState(null)
+  const [simulations, setSimulations] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [runningSimulation, setRunningSimulation] = useState(false)
   const navigate = useNavigate()
-  const results = location.state?.results
 
-  if (!results) {
+  useEffect(() => {
+    loadData()
+  }, [])
+
+  const loadData = async () => {
+    try {
+      const [planResponse, resultResponse] = await Promise.allSettled([
+        getPrimaryPlan(),
+        getLatestResult()
+      ])
+
+      if (planResponse.status === 'fulfilled') {
+        setPlan(planResponse.value.plan)
+        // Generate simulations based on the plan
+        await generatePlanSimulations(planResponse.value.plan)
+      }
+
+      if (resultResponse.status === 'fulfilled') {
+        setLatestResult(resultResponse.value.result)
+      }
+
+    } catch (error) {
+      console.error('Error loading data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const generatePlanSimulations = async (userPlan) => {
+    setRunningSimulation(true)
+    try {
+      // Generate what-if scenarios based on the user's plan type
+      const scenarioData = {
+        baseline_data: latestResult?.lifestyle_data || {},
+        plan_type: userPlan.plan_type,
+        scenarios: getPlanScenarios(userPlan.plan_type)
+      }
+
+      // Call backend simulation API
+      const result = await createSimulations(scenarioData)
+      setSimulations(result.what_if_simulations || [])
+
+    } catch (error) {
+      console.error('Error generating simulations:', error)
+      // Use mock data for now
+      setSimulations(getMockSimulations(userPlan.plan_type))
+    } finally {
+      setRunningSimulation(false)
+    }
+  }
+
+  const getPlanScenarios = (planType) => {
+    const scenarios = {
+      weight_loss: [
+        { name: 'Lose 5 lbs in 6 weeks', changes: { weight: -5 } },
+        { name: 'Lose 10 lbs in 3 months', changes: { weight: -10 } },
+        { name: 'Lose 20 lbs in 6 months', changes: { weight: -20 } }
+      ],
+      exercise: [
+        { name: '15 min daily walking', changes: { activity: 105 } },
+        { name: '30 min daily exercise', changes: { activity: 210 } },
+        { name: '60 min 5x per week', changes: { activity: 300 } }
+      ],
+      diet: [
+        { name: 'Reduce sugar intake', changes: { diet: 'good' } },
+        { name: 'Mediterranean diet', changes: { diet: 'excellent' } },
+        { name: 'Plant-based diet', changes: { diet: 'excellent' } }
+      ],
+      lifestyle: [
+        { name: 'Light lifestyle improvement', changes: { weight: -5, activity: 105 } },
+        { name: 'Moderate lifestyle change', changes: { weight: -10, activity: 210, diet: 'good' } },
+        { name: 'Complete transformation', changes: { weight: -20, activity: 300, diet: 'excellent' } }
+      ]
+    }
+
+    return scenarios[planType] || scenarios.lifestyle
+  }
+
+  const getMockSimulations = (planType) => {
+    const baseRisk = latestResult?.combined_risk || 45
+
+    return getPlanScenarios(planType).map((scenario, idx) => ({
+      scenario: scenario.name,
+      difficulty: idx === 0 ? 'easy' : idx === 1 ? 'moderate' : 'challenging',
+      predicted_risk_reduction: `${10 + (idx * 10)}-${20 + (idx * 15)}%`,
+      new_risk_score: baseRisk * (1 - (0.15 + idx * 0.15)),
+      impact_level: idx === 0 ? 'moderate' : idx === 1 ? 'high' : 'very high',
+      timeline: idx === 0 ? '6-8 weeks' : idx === 1 ? '3 months' : '6 months',
+      description: scenario.name
+    }))
+  }
+
+  if (loading) {
     return (
-      <div className="error-state">
-        <h2>No Simulation Data</h2>
-        <p>Please complete an analysis first</p>
-        <button onClick={() => navigate('/analyze')}>Go to Analysis</button>
-      </div>
+      <>
+        <Navigation />
+        <div className="simulation-page">
+          <div className="loading">
+            <Activity className="loading-icon" />
+            <p>Loading simulations...</p>
+          </div>
+        </div>
+      </>
     )
   }
 
-  // what_if_simulations is directly an array, not an object with .simulations property
-  const simulations = Array.isArray(results.what_if_simulations)
-    ? results.what_if_simulations
-    : (results.what_if_simulations?.simulations || [])
-  const currentRisk = results.risk_assessment?.overall_risk_score || 0.5
-
-  // Debug
-  console.log('Simulations data:', simulations)
-  console.log('Simulations count:', simulations.length)
+  if (!plan) {
+    return (
+      <>
+        <Navigation />
+        <div className="simulation-page">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="no-plan-state"
+          >
+            <AlertCircle size={64} color="#FF9800" />
+            <h2>Choose a Plan First</h2>
+            <p>What-if simulations are personalized based on your active health plan</p>
+            <button className="cta-button" onClick={() => navigate('/plans')}>
+              Select Your Plan
+            </button>
+          </motion.div>
+        </div>
+      </>
+    )
+  }
 
   const getDifficultyColor = (difficulty) => {
     const colors = {
-      'easy': '#2ECC71',
-      'easy-moderate': '#3498DB',
-      'moderate': '#F39C12',
-      'hard': '#E85D75'
+      'easy': '#4CAF50',
+      'moderate': '#FF9800',
+      'challenging': '#F44336'
     }
-    return colors[difficulty] || '#718096'
+    return colors[difficulty] || '#999'
   }
 
   const getImpactColor = (impact) => {
     const colors = {
       'moderate': '#3498DB',
-      'moderate-high': '#2ECC71',
-      'high': '#27AE60',
-      'very high': '#16A085'
+      'high': '#2ECC71',
+      'very high': '#27AE60'
     }
-    return colors[impact] || '#718096'
+    return colors[impact] || '#999'
   }
 
   return (
-    <div className="simulation-page">
-      <div className="container simulation-container">
-        {/* Page Navigation */}
-        <div className="page-nav">
-          <button className="nav-back-btn" onClick={() => navigate('/results', { state: { results } })}>
-            <ArrowLeft size={18} />
-            Back to Results
-          </button>
-          <button className="nav-home-btn" onClick={() => navigate('/')}>
-            <Home size={18} />
-            Home
-          </button>
-        </div>
-
+    <>
+      <Navigation />
+      <div className="simulation-page">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="simulation-header"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="simulation-content"
         >
-          <h1>
-            <TrendingDown size={36} />
-            What-If Simulations
-          </h1>
-          <p className="header-description">
-            Explore how different lifestyle interventions could reduce your diabetes risk.
-            Each scenario shows projected outcomes based on clinical research.
-          </p>
+          {/* Plan Context Banner */}
+          <div className="plan-context-banner">
+            <Target size={24} />
+            <div>
+              <h3>Simulations for: {plan.plan_name}</h3>
+              <p>Explore different scenarios to achieve your health goals</p>
+            </div>
+          </div>
 
-          <div className="current-risk-banner">
-            <span className="text-mono">Your Current Risk Score:</span>
-            <span className="current-risk-value">{(currentRisk * 100).toFixed(1)}%</span>
+          {/* Header */}
+          <div className="simulation-header">
+            <h1>
+              <Sparkles size={32} />
+              What-If Scenarios
+            </h1>
+            <p>Explore how different approaches can help you achieve your plan goals and reduce diabetes risk</p>
+
+            {latestResult && (
+              <div className="current-risk-display">
+                <span>Current Risk:</span>
+                <strong>{latestResult.combined_risk?.toFixed(1)}%</strong>
+              </div>
+            )}
+          </div>
+
+          {/* Simulations Grid */}
+          {runningSimulation ? (
+            <div className="generating-simulations">
+              <Activity className="spin-icon" />
+              <p>Generating personalized simulations...</p>
+            </div>
+          ) : (
+            <div className="simulations-grid">
+              {simulations.map((sim, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="simulation-card"
+                >
+                  <div className="sim-header">
+                    <h3>{sim.scenario || sim.description}</h3>
+                    <div className="sim-badges">
+                      <span
+                        className="badge difficulty"
+                        style={{ backgroundColor: `${getDifficultyColor(sim.difficulty)}20`, color: getDifficultyColor(sim.difficulty) }}
+                      >
+                        {sim.difficulty}
+                      </span>
+                      <span
+                        className="badge impact"
+                        style={{ backgroundColor: `${getImpactColor(sim.impact_level)}20`, color: getImpactColor(sim.impact_level) }}
+                      >
+                        {sim.impact_level} impact
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="sim-metrics">
+                    <div className="metric">
+                      <span className="metric-label">Risk Reduction</span>
+                      <span className="metric-value">{sim.predicted_risk_reduction}</span>
+                    </div>
+                    <div className="metric">
+                      <span className="metric-label">New Risk Score</span>
+                      <span className="metric-value success">{sim.new_risk_score?.toFixed(1)}%</span>
+                    </div>
+                    <div className="metric">
+                      <span className="metric-label">Timeline</span>
+                      <span className="metric-value">{sim.timeline}</span>
+                    </div>
+                  </div>
+
+                  <p className="sim-description">{sim.description}</p>
+
+                  <div className="sim-note">
+                    💡 This scenario aligns with your {plan.plan_name}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+
+          <div className="simulation-footer">
+            <p>These simulations are generated based on your active health plan: <strong>{plan.plan_name}</strong></p>
+            <p>Want to see different scenarios? <button className="link-button" onClick={() => navigate('/plans')}>Change your plan</button></p>
           </div>
         </motion.div>
-
-        {simulations.length === 0 ? (
-          <div className="no-simulations">
-            <Zap size={48} />
-            <h3>No Simulations Available</h3>
-            <p>Simulations are being generated. Please try refreshing or complete a new analysis.</p>
-            <button className="nav-back-btn" onClick={() => navigate('/results', { state: { results } })}>
-              <ArrowLeft size={18} />
-              Back to Results
-            </button>
-          </div>
-        ) : (
-          <div className="simulations-grid">
-          {simulations.map((sim, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              className="simulation-card glass"
-            >
-              <div className="simulation-header-card">
-                <h3>{sim.intervention}</h3>
-                <div className="simulation-badges">
-                  <span
-                    className="badge difficulty-badge"
-                    style={{ background: getDifficultyColor(sim.difficulty) + '20', color: getDifficultyColor(sim.difficulty) }}
-                  >
-                    {sim.difficulty}
-                  </span>
-                  <span
-                    className="badge impact-badge"
-                    style={{ background: getImpactColor(sim.impact) + '20', color: getImpactColor(sim.impact) }}
-                  >
-                    {sim.impact} impact
-                  </span>
-                </div>
-              </div>
-
-              <p className="simulation-description">{sim.description}</p>
-
-              {/* Risk Reduction Visualization */}
-              <div className="risk-reduction-viz">
-                <div className="viz-labels">
-                  <span>Current</span>
-                  <span className="reduction-amount">
-                    -{sim.risk_reduction_percent.toFixed(0)}%
-                  </span>
-                  <span>Projected</span>
-                </div>
-
-                <div className="risk-bars">
-                  <div className="risk-bar current">
-                    <div className="bar-fill" style={{ width: `${currentRisk * 100}%` }}></div>
-                    <span className="bar-value">{(currentRisk * 100).toFixed(1)}%</span>
-                  </div>
-                  <TrendingDown className="arrow-icon" size={24} />
-                  <div className="risk-bar projected">
-                    <div
-                      className="bar-fill projected"
-                      style={{ width: `${sim.projected_risk * 100}%`, background: getImpactColor(sim.impact) }}
-                    ></div>
-                    <span className="bar-value">{(sim.projected_risk * 100).toFixed(1)}%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Items */}
-              <div className="action-items">
-                <h4>
-                  <Target size={18} />
-                  Action Plan
-                </h4>
-                <ul className="action-list">
-                  {sim.action_items.map((action, actionIdx) => (
-                    <li key={actionIdx}>{action}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Timeframe */}
-              <div className="simulation-footer">
-                <div className="timeframe">
-                  <Calendar size={16} />
-                  <span>{sim.timeframe}</span>
-                </div>
-                <button className="try-simulation-btn">
-                  <Zap size={16} />
-                  Try This
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-        )}
-
-        {/* Best Scenario Highlight */}
-        {simulations.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="best-scenario glass"
-          >
-            <h2>
-              <Zap size={28} />
-              Recommended Path
-            </h2>
-            <p>
-              Based on your risk profile, we recommend starting with <strong>graduated lifestyle changes</strong>,
-              focusing first on the most impactful and achievable interventions.
-            </p>
-            <div className="recommendation-pathway">
-              <div className="pathway-step">
-                <span className="step-label">Immediate</span>
-                <span>Improve sleep quality & dietary choices</span>
-              </div>
-              <div className="pathway-arrow">→</div>
-              <div className="pathway-step">
-                <span className="step-label">1-3 Months</span>
-                <span>Increase physical activity gradually</span>
-              </div>
-              <div className="pathway-arrow">→</div>
-              <div className="pathway-step">
-                <span className="step-label">3-6 Months</span>
-                <span>Achieve target weight & maintain habits</span>
-              </div>
-            </div>
-          </motion.div>
-        )}
       </div>
-    </div>
+    </>
   )
 }
 
