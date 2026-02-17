@@ -1,10 +1,19 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Eye, Activity, Brain, ChevronRight, Sparkles } from 'lucide-react'
+import { useEffect } from 'react'
+import { isAuthenticated } from '../services/auth'
 import './HomePage.css'
 
 function HomePage() {
   const navigate = useNavigate()
+
+  // Redirect logged-in users to dashboard
+  useEffect(() => {
+    if (isAuthenticated()) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [navigate])
 
   return (
     <div className="homepage">

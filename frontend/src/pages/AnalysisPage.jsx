@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { Upload, User, Activity, Heart, ArrowRight, Loader, Ruler, Weight, Info, Moon, Coffee, Dumbbell, Brain, Apple, Cigarette, FlaskConical, ChevronDown, ChevronUp } from 'lucide-react'
 import { analyzeComplete } from '../services/api'
+import { saveAnalysisResult } from '../services/results'
+import { getPrimaryPlan } from '../services/plans'
 import './AnalysisPage.css'
 
 function AnalysisPage() {
@@ -267,8 +269,46 @@ function AnalysisPage() {
     setLoading(true)
 
     try {
+      // 1. Perform analysis
       const result = await analyzeComplete(image, lifestyleData)
-      navigate('/results', { state: { results: result } })
+
+      console.log('📊 Analysis result received:', result)
+
+      // 2. Extract risk scores from result (handle different response structures)
+      const overallRisk = result.risk_assessment?.overall_risk_score || result.final_risk || result.risk_score || 0
+      const retinalRisk = result.retinal_analysis?.risk_score || result.retinal_risk || overallRisk
+      const lifestyleRisk = result.lifestyle_prediction?.risk_score || result.lifestyle_risk || overallRisk
+
+      // Convert to percentage if needed (0-1 scale to 0-100)
+      const toPercentage = (val) => val > 1 ? val : val * 100
+
+      const riskData = {
+        analysis_type: 'complete',
+        retinal_risk: toPercentage(retinalRisk),
+        lifestyle_risk: toPercentage(lifestyleRisk),
+        combined_risk: toPercentage(overallRisk),
+        confidence_score: result.confidence || result.confidence_score || 0.85,
+        lifestyle_data: lifestyleData,
+        detailed_results: result,
+        recommendations: result.personalized_advice?.recommendations || result.recommendations || []
+      }
+
+      console.log('💾 Saving analysis data:', riskData)
+
+      // 3. Auto-save results to database
+      const savedResult = await saveAnalysisResult(riskData)
+
+      console.log('✅ Analysis saved!', savedResult)
+
+      // 3. ALWAYS redirect to results page to show the analysis
+      navigate('/results', {
+        state: {
+          results: result,
+          savedResult: savedResult,
+          justCompleted: true
+        }
+      })
+
     } catch (error) {
       console.error('Analysis failed:', error)
       alert('Analysis failed. Please try again.')

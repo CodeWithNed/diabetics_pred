@@ -4,6 +4,7 @@ from flask_cors import CORS
 from config import Config
 from utils.logger import setup_logger
 from api.routes import register_routes
+from models.database import db, init_db
 
 def create_app():
     """Create and configure Flask application."""
@@ -14,12 +15,19 @@ def create_app():
     Config.init_app()
 
     # Setup CORS
-    CORS(app, origins=Config.CORS_ORIGINS)
+    CORS(app,
+         resources={r"/api/*": {"origins": Config.CORS_ORIGINS}},
+         supports_credentials=True,
+         allow_headers=["Content-Type", "Authorization"],
+         methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"])
 
     # Setup logging
     logger = setup_logger(Config.LOG_LEVEL, Config.LOG_FILE)
     app.logger.handlers = logger.handlers
     app.logger.setLevel(logger.level)
+
+    # Initialize database
+    init_db(app)
 
     # Register API routes
     register_routes(app)

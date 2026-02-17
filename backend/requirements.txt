@@ -3,6 +3,12 @@ flask
 flask-cors
 python-dotenv
 
+# Authentication & Security
+flask-jwt-extended
+bcrypt
+psycopg2-binary
+flask-sqlalchemy
+
 # AI/ML Libraries (essential only - remove unused)
 scikit-learn
 tensorflow== 2.20.0
