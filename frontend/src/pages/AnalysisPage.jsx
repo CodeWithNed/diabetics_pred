@@ -276,8 +276,8 @@ function AnalysisPage() {
 
       // 2. Extract risk scores from result (handle different response structures)
       const overallRisk = result.risk_assessment?.overall_risk_score || result.final_risk || result.risk_score || 0
-      const retinalRisk = result.retinal_analysis?.risk_score || result.retinal_risk || overallRisk
-      const lifestyleRisk = result.lifestyle_prediction?.risk_score || result.lifestyle_risk || overallRisk
+      const retinalRisk = result.risk_assessment?.retinal_analysis?.risk_score || result.retinal_risk || 0
+      const lifestyleRisk = result.risk_assessment?.lifestyle_analysis?.risk_score || result.lifestyle_risk || 0
 
       // Convert to percentage if needed (0-1 scale to 0-100)
       const toPercentage = (val) => val > 1 ? val : val * 100
