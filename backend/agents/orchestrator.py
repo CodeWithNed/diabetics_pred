@@ -179,17 +179,18 @@ class DiabetesOrchestrator(BaseAgent):
                 'status': 'success',
                 'user_id': task.get('user_id'),
                 'risk_assessment': {
-                    'overall_risk_score': fusion_result.get('risk_score'),
+                    'overall_risk_score': fusion_result.get('risk_score', 0) * (100 if fusion_result.get('risk_score', 0) <= 1 else 1),  # Convert to percentage
                     'risk_level': fusion_result.get('risk_level'),
                     'confidence': fusion_result.get('confidence'),
                     'retinal_analysis': {
+                        'risk_score': retinal_result.get('dr_probability', 0.0) * 100,  # Convert to percentage
                         'dr_detected': retinal_result.get('dr_detected'),
                         'severity': retinal_result.get('severity'),
                         'confidence': retinal_result.get('confidence'),
                         'findings': retinal_result.get('findings')
                     },
                     'lifestyle_analysis': {
-                        'risk_score': lifestyle_result.get('risk_score'),
+                        'risk_score': lifestyle_result.get('risk_score', 0.0) * (100 if lifestyle_result.get('risk_score', 0) <= 1 else 1),  # Convert to percentage if needed
                         'key_factors': lifestyle_result.get('key_factors'),
                         'confidence': lifestyle_result.get('confidence')
                     }

@@ -29,12 +29,16 @@ def create_plan():
             milestones=data.get('milestones')
         )
 
+        # Add plan to session first
+        db.session.add(plan)
+
         # If this is marked as primary or user has no plans, set as primary
         if data.get('is_primary') or not HealthPlan.query.filter_by(user_id=user['user_id']).first():
-            plan.set_as_primary()
-        else:
-            db.session.add(plan)
-            db.session.commit()
+            # Deactivate all other primary plans for this user
+            HealthPlan.query.filter_by(user_id=user['user_id'], is_primary=True).update({'is_primary': False})
+            plan.is_primary = True
+
+        db.session.commit()
 
         logger.info(f"Health plan created for user {user['user_id']}: {plan.plan_name}")
 

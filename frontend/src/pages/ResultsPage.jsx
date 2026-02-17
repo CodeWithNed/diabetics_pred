@@ -120,17 +120,29 @@ function ResultsPage() {
 
   // Extract data from either fresh or saved results
   const getRiskData = () => {
+    // Helper to convert to percentage if needed (handles both 0-1 and 0-100 scales)
+    const toPercentage = (value) => {
+      if (!value && value !== 0) return 0
+      return value <= 1 ? value * 100 : value
+    }
+
     if (currentResult) {
-      // Fresh from analysis
+      // Fresh from analysis - extract from nested structure
+      const riskAssessment = currentResult.risk_assessment || {}
+      const overallRisk = riskAssessment.overall_risk_score || currentResult.final_risk || currentResult.risk_score || 0
+      const retinalRisk = riskAssessment.retinal_analysis?.risk_score || 0
+      const lifestyleRisk = riskAssessment.lifestyle_analysis?.risk_score || 0
+
       return {
-        combined_risk: currentResult.final_risk || currentResult.risk_score || 0,
-        retinal_risk: currentResult.retinal_analysis?.risk_score || 0,
-        lifestyle_risk: currentResult.lifestyle_prediction?.risk_score || 0,
-        recommendations: currentResult.recommendations || [],
-        risk_assessment: currentResult.risk_assessment
+        combined_risk: toPercentage(overallRisk),
+        retinal_risk: toPercentage(retinalRisk),
+        lifestyle_risk: toPercentage(lifestyleRisk),
+        recommendations: currentResult.personalized_advice?.recommendations || currentResult.recommendations || [],
+        risk_assessment: riskAssessment,
+        risk_category: riskAssessment.risk_level || 'unknown'
       }
     } else if (displayResult) {
-      // From database
+      // From database - values are already in percentage format
       return {
         combined_risk: displayResult.combined_risk || 0,
         retinal_risk: displayResult.retinal_risk || 0,
@@ -290,7 +302,13 @@ function ResultsPage() {
                   <p>Now that you have your results, it's time to take action</p>
 
                   {!hasPlan && justCompleted ? (
-                    <button className="continue-btn primary-cta" onClick={() => navigate('/plans')}>
+                    <button className="continue-btn primary-cta" onClick={() => navigate('/plans', {
+                      state: {
+                        analysisResults: currentResult,
+                        riskData: riskData,
+                        justCompleted: true
+                      }
+                    })}>
                       Choose Your Health Plan
                       <ArrowRight size={20} />
                     </button>
