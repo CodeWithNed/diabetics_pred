@@ -59,6 +59,7 @@ function AnalysisPage() {
   const [loading, setLoading] = useState(false)
   const [showScenarios, setShowScenarios] = useState(true) // Toggle for showing/hiding scenarios
   const [activeTab, setActiveTab] = useState('basic') // Tab state for lifestyle data
+  const [inputErrors, setInputErrors] = useState({}) // Track validation errors for inputs
 
   // Pre-defined scenarios for testing
   const scenarios = {
@@ -221,16 +222,129 @@ function AnalysisPage() {
   const handleImageUpload = (e) => {
     const file = e.target.files[0]
     if (file) {
-      setImage(file)
+      // Check file size (reject if too small - likely low quality)
+      if (file.size < 10000) { // Less than 10KB
+        alert('Image quality is too low. Please upload a higher quality retinal image.')
+        e.target.value = null // Reset input
+        return
+      }
+
       const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result)
+        const img = new Image()
+        img.onload = () => {
+          // Check image dimensions
+          if (img.width < 200 || img.height < 200) {
+            alert('Image resolution is too low. Minimum resolution required: 200x200 pixels. Please upload a higher quality retinal image.')
+            e.target.value = null // Reset input
+            setImage(null)
+            setImagePreview(null)
+            return
+          }
+
+          // Check aspect ratio (retinal images are usually square-ish)
+          const aspectRatio = img.width / img.height
+          if (aspectRatio < 0.5 || aspectRatio > 2) {
+            if (!window.confirm('This image has an unusual aspect ratio for a retinal image. Are you sure this is a retinal fundus image?')) {
+              e.target.value = null // Reset input
+              setImage(null)
+              setImagePreview(null)
+              return
+            }
+          }
+
+          // If all checks pass, set the image
+          setImage(file)
+          setImagePreview(reader.result)
+        }
+
+        img.onerror = () => {
+          alert('Failed to load image. Please try a different image.')
+          e.target.value = null
+          setImage(null)
+          setImagePreview(null)
+        }
+
+        img.src = reader.result
       }
       reader.readAsDataURL(file)
     }
   }
 
   const handleInputChange = (field, value) => {
+    // Validate the input
+    let error = null
+    const numValue = parseFloat(value)
+
+    // Check for negative values in numeric fields
+    const numericFields = [
+      'age', 'height_cm', 'height_ft', 'height_in', 'weight_kg', 'weight_lbs',
+      'waist_circumference', 'waist_inches', 'systolic_bp', 'diastolic_bp',
+      'HbA1c', 'hdl_cholesterol', 'total_cholesterol', 'blood_glucose',
+      'physical_activity', 'sleep_hours'
+    ]
+
+    if (numericFields.includes(field) && value !== '' && numValue < 0) {
+      error = 'Value cannot be negative'
+    }
+
+    // Specific field validations
+    if (field === 'sleep_hours' && value !== '') {
+      if (numValue > 24) {
+        error = 'Sleep hours cannot exceed 24'
+      } else if (numValue < 0) {
+        error = 'Sleep hours cannot be negative'
+      }
+    }
+
+    if (field === 'age' && value !== '') {
+      if (numValue < 0) {
+        error = 'Age cannot be negative'
+      } else if (numValue > 150) {
+        error = 'Please enter a valid age'
+      }
+    }
+
+    if (field === 'systolic_bp' && value !== '') {
+      if (numValue < 0) {
+        error = 'Blood pressure cannot be negative'
+      } else if (numValue > 300) {
+        error = 'Please enter a valid blood pressure'
+      }
+    }
+
+    if (field === 'diastolic_bp' && value !== '') {
+      if (numValue < 0) {
+        error = 'Blood pressure cannot be negative'
+      } else if (numValue > 200) {
+        error = 'Please enter a valid blood pressure'
+      }
+    }
+
+    if (field === 'HbA1c' && value !== '') {
+      if (numValue < 0) {
+        error = 'HbA1c cannot be negative'
+      } else if (numValue > 20) {
+        error = 'Please enter a valid HbA1c value'
+      }
+    }
+
+    if (field === 'physical_activity' && value !== '') {
+      const maxMinutesPerWeek = 7 * 24 * 60 // 7 days * 24 hours * 60 minutes
+      if (numValue < 0) {
+        error = 'Activity minutes cannot be negative'
+      } else if (numValue > maxMinutesPerWeek) {
+        error = 'Activity minutes cannot exceed total minutes in a week'
+      }
+    }
+
+    // Update error state
+    setInputErrors(prev => ({
+      ...prev,
+      [field]: error
+    }))
+
+    // Always update the value (even if invalid) so user can see what they're typing
     setLifestyleData(prev => ({ ...prev, [field]: value }))
   }
 
@@ -604,10 +718,19 @@ function AnalysisPage() {
                   <input
                     type="number"
                     value={lifestyleData.age}
-                    onChange={(e) => handleInputChange('age', parseInt(e.target.value))}
+                    onChange={(e) => handleInputChange('age', e.target.value)}
                     placeholder="45"
                     required
+                    style={{
+                      borderColor: inputErrors.age ? '#FF5722' : '',
+                      backgroundColor: inputErrors.age ? '#FFF5F5' : ''
+                    }}
                   />
+                  {inputErrors.age && (
+                    <span className="field-error" style={{ color: '#FF5722', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {inputErrors.age}
+                    </span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -663,6 +786,10 @@ function AnalysisPage() {
                         onChange={(e) => handleInputChange('height_cm', e.target.value)}
                         placeholder="170"
                         required
+                        style={{
+                          borderColor: inputErrors.height_cm ? '#FF5722' : '',
+                          backgroundColor: inputErrors.height_cm ? '#FFF5F5' : ''
+                        }}
                       />
                     ) : (
                       <div className="dual-input">
@@ -673,6 +800,10 @@ function AnalysisPage() {
                           placeholder="5"
                           className="small-input"
                           required
+                          style={{
+                            borderColor: inputErrors.height_ft ? '#FF5722' : '',
+                            backgroundColor: inputErrors.height_ft ? '#FFF5F5' : ''
+                          }}
                         />
                         <span className="input-separator">ft</span>
                         <input
@@ -682,6 +813,10 @@ function AnalysisPage() {
                           placeholder="10"
                           className="small-input"
                           required
+                          style={{
+                            borderColor: inputErrors.height_in ? '#FF5722' : '',
+                            backgroundColor: inputErrors.height_in ? '#FFF5F5' : ''
+                          }}
                         />
                         <span className="input-separator">in</span>
                       </div>
@@ -712,6 +847,10 @@ function AnalysisPage() {
                         onChange={(e) => handleInputChange('weight_kg', e.target.value)}
                         placeholder="75"
                         required
+                        style={{
+                          borderColor: inputErrors.weight_kg ? '#FF5722' : '',
+                          backgroundColor: inputErrors.weight_kg ? '#FFF5F5' : ''
+                        }}
                       />
                     ) : (
                       <input
@@ -721,6 +860,10 @@ function AnalysisPage() {
                         onChange={(e) => handleInputChange('weight_lbs', e.target.value)}
                         placeholder="165"
                         required
+                        style={{
+                          borderColor: inputErrors.weight_lbs ? '#FF5722' : '',
+                          backgroundColor: inputErrors.weight_lbs ? '#FFF5F5' : ''
+                        }}
                       />
                     )}
                     <select
@@ -815,8 +958,18 @@ function AnalysisPage() {
                     value={lifestyleData.systolic_bp}
                     onChange={(e) => handleInputChange('systolic_bp', e.target.value)}
                     placeholder="120"
+                    style={{
+                      borderColor: inputErrors.systolic_bp ? '#FF5722' : '',
+                      backgroundColor: inputErrors.systolic_bp ? '#FFF5F5' : ''
+                    }}
                   />
-                  <span className="field-hint">Top number (normal: 90-120)</span>
+                  {inputErrors.systolic_bp ? (
+                    <span className="field-error" style={{ color: '#FF5722', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {inputErrors.systolic_bp}
+                    </span>
+                  ) : (
+                    <span className="field-hint">Top number (normal: 90-120)</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -829,8 +982,18 @@ function AnalysisPage() {
                     value={lifestyleData.diastolic_bp}
                     onChange={(e) => handleInputChange('diastolic_bp', e.target.value)}
                     placeholder="80"
+                    style={{
+                      borderColor: inputErrors.diastolic_bp ? '#FF5722' : '',
+                      backgroundColor: inputErrors.diastolic_bp ? '#FFF5F5' : ''
+                    }}
                   />
-                  <span className="field-hint">Bottom number (normal: 60-80)</span>
+                  {inputErrors.diastolic_bp ? (
+                    <span className="field-error" style={{ color: '#FF5722', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {inputErrors.diastolic_bp}
+                    </span>
+                  ) : (
+                    <span className="field-hint">Bottom number (normal: 60-80)</span>
+                  )}
                 </div>
               </div>
 
@@ -854,8 +1017,18 @@ function AnalysisPage() {
                     value={lifestyleData.HbA1c}
                     onChange={(e) => handleInputChange('HbA1c', e.target.value)}
                     placeholder="5.5"
+                    style={{
+                      borderColor: inputErrors.HbA1c ? '#FF5722' : '',
+                      backgroundColor: inputErrors.HbA1c ? '#FFF5F5' : ''
+                    }}
                   />
-                  <span className="field-hint">Normal: &lt;5.7%, Pre-diabetes: 5.7-6.4%, Diabetes: ≥6.5%</span>
+                  {inputErrors.HbA1c ? (
+                    <span className="field-error" style={{ color: '#FF5722', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {inputErrors.HbA1c}
+                    </span>
+                  ) : (
+                    <span className="field-hint">Normal: &lt;5.7%, Pre-diabetes: 5.7-6.4%, Diabetes: ≥6.5%</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -1011,8 +1184,18 @@ function AnalysisPage() {
                     onChange={(e) => handleInputChange('physical_activity', e.target.value)}
                     placeholder="150"
                     required
+                    style={{
+                      borderColor: inputErrors.physical_activity ? '#FF5722' : '',
+                      backgroundColor: inputErrors.physical_activity ? '#FFF5F5' : ''
+                    }}
                   />
-                  <span className="field-hint">WHO recommends 150+ min/week</span>
+                  {inputErrors.physical_activity ? (
+                    <span className="field-error" style={{ color: '#FF5722', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {inputErrors.physical_activity}
+                    </span>
+                  ) : (
+                    <span className="field-hint">WHO recommends 150+ min/week</span>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -1023,14 +1206,22 @@ function AnalysisPage() {
                   <input
                     type="number"
                     step="0.5"
-                    min="3"
-                    max="12"
                     value={lifestyleData.sleep_hours}
                     onChange={(e) => handleInputChange('sleep_hours', e.target.value)}
                     placeholder="7"
                     required
+                    style={{
+                      borderColor: inputErrors.sleep_hours ? '#FF5722' : '',
+                      backgroundColor: inputErrors.sleep_hours ? '#FFF5F5' : ''
+                    }}
                   />
-                  <span className="field-hint">Adults need 7-9 hours</span>
+                  {inputErrors.sleep_hours ? (
+                    <span className="field-error" style={{ color: '#FF5722', fontSize: '0.85rem', marginTop: '4px', display: 'block' }}>
+                      {inputErrors.sleep_hours}
+                    </span>
+                  ) : (
+                    <span className="field-hint">Adults need 7-9 hours</span>
+                  )}
                 </div>
 
                 <div className="form-group">

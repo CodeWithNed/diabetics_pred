@@ -20,6 +20,9 @@ function PlanSelectionPage() {
   const riskData = location.state?.riskData
   const justCompleted = location.state?.justCompleted
 
+  // Safe string conversion helper - moved outside for broader access
+  const safeString = (val) => String(val || '')
+
   useEffect(() => {
     generatePersonalizedPlans()
   }, [])
@@ -40,13 +43,14 @@ function PlanSelectionPage() {
     const personalizedPlans = []
 
     // Analyze key risk factors to determine which plans to recommend
-    const hasWeightIssue = keyFactors.some(f => f.toLowerCase().includes('weight') || f.toLowerCase().includes('bmi'))
-    const hasExerciseIssue = keyFactors.some(f => f.toLowerCase().includes('physical') || f.toLowerCase().includes('exercise'))
-    const hasDietIssue = keyFactors.some(f => f.toLowerCase().includes('diet') || f.toLowerCase().includes('nutrition'))
-    const hasSleepIssue = keyFactors.some(f => f.toLowerCase().includes('sleep'))
-    const hasStressIssue = keyFactors.some(f => f.toLowerCase().includes('stress'))
-    const hasSmokingIssue = keyFactors.some(f => f.toLowerCase().includes('smoking'))
-    const hasAlcoholIssue = keyFactors.some(f => f.toLowerCase().includes('alcohol'))
+
+    const hasWeightIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('weight') || safeString(f).toLowerCase().includes('bmi'))
+    const hasExerciseIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('physical') || safeString(f).toLowerCase().includes('exercise'))
+    const hasDietIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('diet') || safeString(f).toLowerCase().includes('nutrition'))
+    const hasSleepIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('sleep'))
+    const hasStressIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('stress'))
+    const hasSmokingIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('smoking'))
+    const hasAlcoholIssue = keyFactors.some(f => safeString(f).toLowerCase().includes('alcohol'))
     const hasRetinalIssue = retinalRisk > 70 || retinalFindings.dr_detected
 
     // Plan 1: Most Critical Issue Plan
@@ -80,10 +84,10 @@ function PlanSelectionPage() {
         ],
         expectedOutcome: `Prevent vision loss, ${Math.min(35, combinedRisk * 0.4).toFixed(0)}% risk reduction`,
         llmRecommendations: recommendations.filter(r =>
-          r.toLowerCase().includes('eye') ||
-          r.toLowerCase().includes('vision') ||
-          r.toLowerCase().includes('retinal') ||
-          r.toLowerCase().includes('glucose')
+          safeString(r).toLowerCase().includes('eye') ||
+          safeString(r).toLowerCase().includes('vision') ||
+          safeString(r).toLowerCase().includes('retinal') ||
+          safeString(r).toLowerCase().includes('glucose')
         ).slice(0, 3)
       })
     }
@@ -119,10 +123,10 @@ function PlanSelectionPage() {
         ],
         expectedOutcome: `${Math.min(30, combinedRisk * 0.35).toFixed(0)}% risk reduction`,
         llmRecommendations: recommendations.filter(r =>
-          r.toLowerCase().includes('exercise') ||
-          r.toLowerCase().includes('physical') ||
-          r.toLowerCase().includes('weight') ||
-          r.toLowerCase().includes('activity')
+          safeString(r).toLowerCase().includes('exercise') ||
+          safeString(r).toLowerCase().includes('physical') ||
+          safeString(r).toLowerCase().includes('weight') ||
+          safeString(r).toLowerCase().includes('activity')
         ).slice(0, 3)
       })
     }
@@ -157,11 +161,11 @@ function PlanSelectionPage() {
       ],
       expectedOutcome: `${Math.min(28, combinedRisk * 0.32).toFixed(0)}% risk reduction`,
       llmRecommendations: recommendations.filter(r =>
-        r.toLowerCase().includes('diet') ||
-        r.toLowerCase().includes('food') ||
-        r.toLowerCase().includes('nutrition') ||
-        r.toLowerCase().includes('sugar') ||
-        r.toLowerCase().includes('carb')
+        safeString(r).toLowerCase().includes('diet') ||
+        safeString(r).toLowerCase().includes('food') ||
+        safeString(r).toLowerCase().includes('nutrition') ||
+        safeString(r).toLowerCase().includes('sugar') ||
+        safeString(r).toLowerCase().includes('carb')
       ).slice(0, 3)
     })
 
@@ -196,10 +200,10 @@ function PlanSelectionPage() {
         ],
         expectedOutcome: `${Math.min(18, combinedRisk * 0.2).toFixed(0)}% risk reduction`,
         llmRecommendations: recommendations.filter(r =>
-          r.toLowerCase().includes('sleep') ||
-          r.toLowerCase().includes('stress') ||
-          r.toLowerCase().includes('relax') ||
-          r.toLowerCase().includes('rest')
+          safeString(r).toLowerCase().includes('sleep') ||
+          safeString(r).toLowerCase().includes('stress') ||
+          safeString(r).toLowerCase().includes('relax') ||
+          safeString(r).toLowerCase().includes('rest')
         ).slice(0, 3)
       })
     }
@@ -500,7 +504,7 @@ function PlanSelectionPage() {
                   <div className="llm-recommendations">
                     <strong>AI Recommendations:</strong>
                     {template.llmRecommendations.slice(0, 2).map((rec, i) => (
-                      <div key={i} className="rec-item">• {rec.substring(0, 60)}...</div>
+                      <div key={i} className="rec-item">• {safeString(rec).substring(0, 60)}...</div>
                     ))}
                   </div>
                 )}
