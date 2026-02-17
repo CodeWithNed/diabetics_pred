@@ -3087,3 +3087,48 @@ ImportError: cannot import name 'retinal_agent' from 'agents.retinal_agent' (/ap
 2026-02-15 17:29:04 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 2: Active Lifestyle
 2026-02-15 17:29:17 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 2: Complete Lifestyle Change
 2026-02-15 17:31:01 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 2: Weight Loss Journey
+2026-02-16 10:32:33 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-02-17 04:47:59 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 04:47:59 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 15:42:02 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 15:42:02 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 15:47:15 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 15:47:15 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 15:48:31 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 15:48:31 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 15:49:17 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 15:49:17 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 16:09:00 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 16:09:00 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 16:10:56 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-02-17 16:10:56 - app - INFO - Diabetes Detection AI Backend initialized
+2026-02-17 16:11:57 - diabetes_ai.api.auth_routes - INFO - New user registered: user34 (normal)
+2026-02-17 16:12:06 - diabetes_ai.api.auth_routes - INFO - User logged in: user34
+2026-02-17 16:12:16 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-02-17 16:12:16 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-02-17 16:12:16 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-02-17 16:12:16 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-02-17 16:12:16 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-02-17 16:12:16 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-02-17 16:12:16 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-02-17 16:12:16 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.82
+2026-02-17 16:12:16 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-02-17 16:12:16 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-02-17 16:12:16 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.73, Level: very_high
+2026-02-17 16:12:16 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-02-17 16:12:16 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7291710204383309
+2026-02-17 16:12:17 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-02-17 16:12:17 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-02-17 16:12:17 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.59s
+2026-02-17 16:12:17 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-02-17 16:12:17 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7291710204383309
+2026-02-17 16:12:17 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-02-17 16:12:17 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7291710204383309
+2026-02-17 16:12:17 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-02-17 16:12:26 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 1: Weight Loss Journey
+2026-02-17 16:12:32 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 1: Active Lifestyle
+2026-02-17 16:12:43 - diabetes_ai.api.auth_routes - INFO - User logged out: user34
+2026-02-17 16:12:46 - diabetes_ai.api.auth_routes - INFO - User logged in: user34
+2026-02-17 16:12:54 - diabetes_ai.api.auth_routes - INFO - User logged out: user34
+2026-02-17 16:12:57 - diabetes_ai.api.auth_routes - INFO - User logged in: user34
