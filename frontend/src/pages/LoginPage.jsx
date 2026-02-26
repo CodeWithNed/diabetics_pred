@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { login } from '../services/auth'
+import logo from '../assets/logo.jpg'
 import './LoginPage.css'
 
 function LoginPage() {
@@ -43,7 +44,9 @@ function LoginPage() {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1>Diabetes Detection AI</h1>
+          <img src={logo} alt="Diavita Logo" className="login-logo" style={{ width: '120px', height: 'auto', margin: '0 auto 1rem' }} />
+          <h1>DIAVITA</h1>
+          <p className="tagline" style={{ fontSize: '0.9rem', color: '#667eea', fontWeight: '600', marginBottom: '0.5rem' }}>See Clearly & Live Freely</p>
           <p>Sign in to your account</p>
         </div>
 

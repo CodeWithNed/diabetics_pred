@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Activity, User, LogOut, Menu, X, Target } from 'lucide-react'
 import { getStoredUser, logout, isAdmin } from '../services/auth'
+import logo from '../assets/logo.jpg'
 import './Navigation.css'
 
 function Navigation() {
@@ -25,8 +26,8 @@ function Navigation() {
     <nav className="navigation">
       <div className="nav-container">
         <div className="nav-brand" onClick={() => navigate('/dashboard')}>
-          <Activity className="brand-icon" />
-          <span>Diabetes AI</span>
+          <img src={logo} alt="Diavita Logo" className="brand-logo" style={{ height: '40px', width: 'auto', marginRight: '10px' }} />
+          <span>DIAVITA</span>
         </div>
 
         <button className="mobile-menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
