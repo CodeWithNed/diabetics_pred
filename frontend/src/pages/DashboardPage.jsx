@@ -223,7 +223,7 @@ function DashboardPage() {
       const lines = pdf.splitTextToSize(text, contentWidth)
 
       lines.forEach(line => {
-        if (yPos > pageHeight - margin) {
+        if (yPos > pageHeight - margin - 10) {
           pdf.addPage()
           yPos = margin
         }
@@ -309,13 +309,17 @@ function DashboardPage() {
     }
 
     // Personalized Insights
+    if (yPos > pageHeight - margin - 50) {
+      pdf.addPage()
+      yPos = margin
+    }
     addText('PERSONALIZED HEALTH INSIGHTS', 14, true, [102, 126, 234])
     reportContent.insights.forEach(insight => {
       pdf.setFillColor(240, 244, 255)
       const textLines = pdf.splitTextToSize(insight, contentWidth - 10)
       const boxHeight = textLines.length * 5 + 6
 
-      if (yPos + boxHeight > pageHeight - margin) {
+      if (yPos + boxHeight > pageHeight - margin - 10) {
         pdf.addPage()
         yPos = margin
       }
@@ -337,8 +341,16 @@ function DashboardPage() {
     addDivider()
 
     // Detailed Recommendations
+    if (yPos > pageHeight - margin - 50) {
+      pdf.addPage()
+      yPos = margin
+    }
     addText('DETAILED RECOMMENDATIONS', 14, true, [102, 126, 234])
     reportContent.recommendations.forEach(rec => {
+      if (yPos > pageHeight - margin - 40) {
+        pdf.addPage()
+        yPos = margin
+      }
       addText(rec.category, 12, true)
       rec.items.forEach(item => {
         addText(`• ${item}`, 10)
@@ -348,11 +360,15 @@ function DashboardPage() {
     addDivider()
 
     // Next Steps
+    if (yPos > pageHeight - margin - 50) {
+      pdf.addPage()
+      yPos = margin
+    }
     addText('IMMEDIATE NEXT STEPS', 14, true, [102, 126, 234])
     pdf.setFillColor(255, 248, 225)
     const nextStepsHeight = reportContent.nextSteps.length * 8 + 10
 
-    if (yPos + nextStepsHeight > pageHeight - margin) {
+    if (yPos + nextStepsHeight > pageHeight - margin - 10) {
       pdf.addPage()
       yPos = margin
     }
@@ -363,7 +379,8 @@ function DashboardPage() {
       addText(`✓ ${step}`, 10, true)
     })
 
-    // Footer
+    // Footer - add new page if needed
+    pdf.addPage()
     yPos = pageHeight - 25
     pdf.setFontSize(8)
     pdf.setTextColor(100, 100, 100)
@@ -625,7 +642,7 @@ function DashboardPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 1 }}
                     >
-                      {riskScore.toFixed(0)}
+                      {riskScore.toFixed(2)}
                     </motion.span>
                     <span className="risk-percent">%</span>
                   </div>
@@ -664,14 +681,14 @@ function DashboardPage() {
                   <div className="breakdown-item" style={{ textAlign: 'center' }}>
                     <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Retinal Analysis</span>
                     <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#6366f1' }}>
-                      {(latestResult.retinal_risk || 0).toFixed(0)}%
+                      {(latestResult.retinal_risk || 0).toFixed(2)}%
                     </span>
                   </div>
 
                   <div className="breakdown-item" style={{ textAlign: 'center' }}>
                     <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Lifestyle Factors</span>
                     <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#10b981' }}>
-                      {(latestResult.lifestyle_risk || 0).toFixed(0)}%
+                      {(latestResult.lifestyle_risk || 0).toFixed(2)}%
                     </span>
                   </div>
                 </div>
@@ -841,7 +858,7 @@ function DashboardPage() {
                           <span style={{ fontSize: '0.9rem', color: '#6b7280' }}>Progress</span>
                         </div>
                         <div className="progress-display" style={{ fontSize: '2rem', fontWeight: 'bold', color: '#667eea' }}>
-                          {primaryPlan.current_progress}%
+                          {Number(primaryPlan.current_progress).toFixed(2)}%
                         </div>
                       </div>
 

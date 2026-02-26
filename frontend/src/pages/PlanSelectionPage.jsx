@@ -82,7 +82,7 @@ function PlanSelectionPage() {
           { name: 'Follow-up shows improvement', target: 70 },
           { name: 'Vision protected, risk reduced', target: 100 }
         ],
-        expectedOutcome: `Prevent vision loss, ${Math.min(35, combinedRisk * 0.4).toFixed(0)}% risk reduction`,
+        expectedOutcome: `Prevent vision loss, ${Math.min(35, combinedRisk * 0.4).toFixed(2)}% risk reduction`,
         llmRecommendations: recommendations.filter(r =>
           safeString(r).toLowerCase().includes('eye') ||
           safeString(r).toLowerCase().includes('vision') ||
@@ -121,7 +121,7 @@ function PlanSelectionPage() {
           { name: 'Target weight loss achieved', target: 70 },
           { name: 'Lifestyle fully transformed', target: 100 }
         ],
-        expectedOutcome: `${Math.min(30, combinedRisk * 0.35).toFixed(0)}% risk reduction`,
+        expectedOutcome: `${Math.min(30, combinedRisk * 0.35).toFixed(2)}% risk reduction`,
         llmRecommendations: recommendations.filter(r =>
           safeString(r).toLowerCase().includes('exercise') ||
           safeString(r).toLowerCase().includes('physical') ||
@@ -159,7 +159,7 @@ function PlanSelectionPage() {
         { name: 'Blood markers improved', target: 75 },
         { name: 'Sustainable eating pattern', target: 100 }
       ],
-      expectedOutcome: `${Math.min(28, combinedRisk * 0.32).toFixed(0)}% risk reduction`,
+      expectedOutcome: `${Math.min(28, combinedRisk * 0.32).toFixed(2)}% risk reduction`,
       llmRecommendations: recommendations.filter(r =>
         safeString(r).toLowerCase().includes('diet') ||
         safeString(r).toLowerCase().includes('food') ||
@@ -198,7 +198,7 @@ function PlanSelectionPage() {
           { name: 'Quality sleep achieved consistently', target: 85 },
           { name: 'Sustainable habits integrated', target: 100 }
         ],
-        expectedOutcome: `${Math.min(18, combinedRisk * 0.2).toFixed(0)}% risk reduction`,
+        expectedOutcome: `${Math.min(18, combinedRisk * 0.2).toFixed(2)}% risk reduction`,
         llmRecommendations: recommendations.filter(r =>
           safeString(r).toLowerCase().includes('sleep') ||
           safeString(r).toLowerCase().includes('stress') ||
@@ -237,7 +237,7 @@ function PlanSelectionPage() {
           { name: 'Visible improvements', target: 75 },
           { name: '30-day transformation', target: 100 }
         ],
-        expectedOutcome: `${Math.min(10, combinedRisk * 0.15).toFixed(0)}% quick risk reduction`,
+        expectedOutcome: `${Math.min(10, combinedRisk * 0.15).toFixed(2)}% quick risk reduction`,
         llmRecommendations: recommendations.slice(0, 3)
       })
     }
@@ -270,7 +270,7 @@ function PlanSelectionPage() {
         { name: 'Significant measurable progress', target: 70 },
         { name: 'Complete transformation achieved', target: 100 }
       ],
-      expectedOutcome: `${Math.min(45, combinedRisk * 0.5).toFixed(0)}% total risk reduction`,
+      expectedOutcome: `${Math.min(45, combinedRisk * 0.5).toFixed(2)}% total risk reduction`,
       llmRecommendations: recommendations.slice(0, 5)
     })
 
@@ -407,7 +407,7 @@ function PlanSelectionPage() {
                 <div className="risk-item">
                   <span className="risk-label">Current Risk:</span>
                   <span className="risk-value" style={{ color: getRiskColor(riskData.combined_risk) }}>
-                    {riskData.combined_risk?.toFixed(1)}%
+                    {riskData.combined_risk?.toFixed(2)}%
                   </span>
                 </div>
                 <div className="risk-item">
@@ -460,10 +460,10 @@ function PlanSelectionPage() {
                         <div key={i} className="scenario-item">
                           <span className="timeline">{scenario.timeline}:</span>
                           <span className="new-risk" style={{ color: getRiskColor(scenario.newRisk) }}>
-                            {scenario.newRisk}%
+                            {scenario.newRisk.toFixed(2)}%
                           </span>
                           <span className={`change ${scenario.change < 0 ? 'negative' : 'neutral'}`}>
-                            ({scenario.change > 0 ? '+' : ''}{scenario.change}%)
+                            ({scenario.change > 0 ? '+' : ''}{scenario.change.toFixed(2)}%)
                           </span>
                           <span className="scenario-desc">{scenario.description}</span>
                         </div>
