@@ -6,6 +6,7 @@ import {
   Heart, Droplets, Brain, Eye, Zap, Moon, Scale, Clock,
   ChevronRight, Sparkles, Shield, BarChart3, User, Download, FileText, FileSpreadsheet
 } from 'lucide-react'
+import jsPDF from 'jspdf'
 import Navigation from '../components/Navigation'
 import { getStoredUser } from '../services/auth'
 import { getLatestResult, getResultsSummary } from '../services/results'
@@ -200,225 +201,184 @@ function DashboardPage() {
   }
 
   // Generate PDF report with rich content
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     if (!latestResult) return
 
     const reportContent = generateReportContent()
     const riskScore = latestResult.combined_risk || 0
 
-    // Create rich PDF content as HTML
-    const pdfContent = `
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <style>
-          * { margin: 0; padding: 0; box-sizing: border-box; }
-          body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            padding: 40px;
-            line-height: 1.6;
-            color: #333;
-          }
-          .header {
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-          }
-          h1 {
-            color: #1a1a2e;
-            font-size: 28px;
-            margin-bottom: 10px;
-          }
-          h2 {
-            color: #667eea;
-            font-size: 20px;
-            margin: 25px 0 15px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e0e0e0;
-          }
-          h3 {
-            color: #444;
-            font-size: 16px;
-            margin: 15px 0 10px 0;
-          }
-          .metadata {
-            color: #666;
-            font-size: 14px;
-          }
-          .section {
-            margin: 30px 0;
-            page-break-inside: avoid;
-          }
-          .metric {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px;
-            margin: 8px 0;
-            background: #f8f9fa;
-            border-radius: 8px;
-          }
-          .metric strong {
-            color: #1a1a2e;
-          }
-          .risk-score-box {
-            background: linear-gradient(135deg, ${riskScore < 50 ? '#00F5A0, #00D9FF' : riskScore < 75 ? '#FFD200, #F7971E' : '#FF416C, #FF4B2B'});
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            margin: 20px 0;
-          }
-          .risk-score-box .score {
-            font-size: 48px;
-            font-weight: bold;
-          }
-          .risk-high { color: #ff4b2b; font-weight: bold; }
-          .risk-moderate { color: #f7971e; font-weight: bold; }
-          .risk-low { color: #00d9ff; font-weight: bold; }
-          .insight-box {
-            background: #f0f4ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin: 15px 0;
-          }
-          .recommendation-category {
-            margin: 20px 0;
-          }
-          ul {
-            margin-left: 20px;
-          }
-          li {
-            margin: 8px 0;
-          }
-          .next-steps {
-            background: #fff8e1;
-            border: 1px solid #ffeb3b;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 20px 0;
-          }
-          .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            font-size: 12px;
-            color: #666;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="header">
-          <h1>Comprehensive Diabetes Risk Assessment Report</h1>
-          <div class="metadata">
-            <p><strong>Patient:</strong> ${user?.username || 'Anonymous'}</p>
-            <p><strong>Generated on:</strong> ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-            <p><strong>Report ID:</strong> ${Date.now()}</p>
-          </div>
-        </div>
+    // Create a new jsPDF instance
+    const pdf = new jsPDF('p', 'mm', 'a4')
+    const pageWidth = pdf.internal.pageSize.getWidth()
+    const pageHeight = pdf.internal.pageSize.getHeight()
+    const margin = 20
+    const contentWidth = pageWidth - 2 * margin
+    let yPos = margin
 
-        <div class="section">
-          <h2>Executive Summary</h2>
-          <div class="risk-score-box">
-            <div class="score">${riskScore.toFixed(0)}%</div>
-            <div>${getRiskLabel(latestResult.risk_category)}</div>
-          </div>
-          <p style="margin-top: 15px; font-size: 16px;">
-            <strong>${reportContent.riskInterpretation}</strong>
-          </p>
-        </div>
+    // Helper function to add text with wrapping
+    const addText = (text, fontSize, isBold = false, color = [0, 0, 0]) => {
+      pdf.setFontSize(fontSize)
+      pdf.setFont('helvetica', isBold ? 'bold' : 'normal')
+      pdf.setTextColor(...color)
+      const lines = pdf.splitTextToSize(text, contentWidth)
 
-        <div class="section">
-          <h2>Risk Assessment Breakdown</h2>
-          <div class="metric">
-            <span>Overall Diabetes Risk:</span>
-            <strong class="${riskScore < 50 ? 'risk-low' : riskScore < 75 ? 'risk-moderate' : 'risk-high'}">${riskScore.toFixed(1)}%</strong>
-          </div>
-          <div class="metric">
-            <span>Retinal Analysis Risk:</span>
-            <strong>${(latestResult.retinal_risk || 0).toFixed(1)}%</strong>
-          </div>
-          <div class="metric">
-            <span>Lifestyle Factors Risk:</span>
-            <strong>${(latestResult.lifestyle_risk || 0).toFixed(1)}%</strong>
-          </div>
-          <div class="metric">
-            <span>Confidence Score:</span>
-            <strong>${((latestResult.confidence_score || 0.85) * 100).toFixed(0)}%</strong>
-          </div>
-        </div>
+      lines.forEach(line => {
+        if (yPos > pageHeight - margin) {
+          pdf.addPage()
+          yPos = margin
+        }
+        pdf.text(line, margin, yPos)
+        yPos += fontSize * 0.5
+      })
+      yPos += 3
+    }
 
-        ${healthMetrics ? `
-        <div class="section">
-          <h2>Health Metrics Analysis</h2>
-          <h3>Vital Signs</h3>
-          ${healthMetrics.vitals.map(m => `
-            <div class="metric">
-              <span>${m.label}:</span>
-              <strong>${m.value} ${m.unit || ''}</strong>
-            </div>
-          `).join('')}
+    // Helper to add a section divider
+    const addDivider = () => {
+      pdf.setDrawColor(200, 200, 200)
+      pdf.line(margin, yPos, pageWidth - margin, yPos)
+      yPos += 8
+    }
 
-          ${healthMetrics.lifestyle ? `
-          <h3>Lifestyle Factors</h3>
-          ${healthMetrics.lifestyle.map(m => `
-            <div class="metric">
-              <span>${m.label}:</span>
-              <strong>${m.value} ${m.unit || ''}</strong>
-            </div>
-          `).join('')}
-          ` : ''}
-        </div>
-        ` : ''}
+    // Header
+    pdf.setFillColor(102, 126, 234)
+    pdf.rect(0, 0, pageWidth, 40, 'F')
+    pdf.setTextColor(255, 255, 255)
+    pdf.setFontSize(24)
+    pdf.setFont('helvetica', 'bold')
+    pdf.text('DIAVITA', pageWidth / 2, 20, { align: 'center' })
+    pdf.setFontSize(12)
+    pdf.text('Diabetes Risk Assessment Report', pageWidth / 2, 30, { align: 'center' })
 
-        <div class="section">
-          <h2>Personalized Health Insights</h2>
-          ${reportContent.insights.map(insight => `
-            <div class="insight-box">
-              <p>${insight}</p>
-            </div>
-          `).join('')}
-        </div>
+    yPos = 50
 
-        <div class="section">
-          <h2>Detailed Recommendations</h2>
-          ${reportContent.recommendations.map(rec => `
-            <div class="recommendation-category">
-              <h3>${rec.category}</h3>
-              <ul>
-                ${rec.items.map(item => `<li>${item}</li>`).join('')}
-              </ul>
-            </div>
-          `).join('')}
-        </div>
+    // Patient Info
+    pdf.setTextColor(0, 0, 0)
+    addText(`Patient: ${user?.username || 'Anonymous'}`, 10, false, [100, 100, 100])
+    addText(`Generated on: ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`, 10, false, [100, 100, 100])
+    addText(`Report ID: ${Date.now()}`, 10, false, [100, 100, 100])
+    yPos += 5
+    addDivider()
 
-        <div class="section">
-          <h2>Immediate Next Steps</h2>
-          <div class="next-steps">
-            <ul>
-              ${reportContent.nextSteps.map(step => `<li><strong>${step}</strong></li>`).join('')}
-            </ul>
-          </div>
-        </div>
+    // Executive Summary
+    addText('EXECUTIVE SUMMARY', 16, true, [102, 126, 234])
 
-        <div class="footer">
-          <p><strong>Disclaimer:</strong> This report is generated by an AI-powered system for informational purposes only.
-          It does not constitute medical advice. Please consult with qualified healthcare professionals for diagnosis and treatment.</p>
-          <p><strong>Powered by:</strong> Advanced AI Diabetes Detection System | ${new Date().getFullYear()}</p>
-        </div>
-      </body>
-      </html>
-    `
+    // Risk Score Box
+    const riskColor = riskScore < 50 ? [0, 217, 255] : riskScore < 75 ? [247, 151, 30] : [255, 65, 108]
+    pdf.setFillColor(...riskColor)
+    pdf.roundedRect(margin, yPos, contentWidth, 30, 3, 3, 'F')
+    pdf.setTextColor(255, 255, 255)
+    pdf.setFontSize(32)
+    pdf.setFont('helvetica', 'bold')
+    pdf.text(`${riskScore.toFixed(0)}%`, pageWidth / 2, yPos + 15, { align: 'center' })
+    pdf.setFontSize(12)
+    pdf.text(getRiskLabel(latestResult.risk_category), pageWidth / 2, yPos + 25, { align: 'center' })
+    yPos += 35
 
-    // Create blob and download
-    const blob = new Blob([pdfContent], { type: 'text/html' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `diabetes-risk-report-${new Date().toISOString().split('T')[0]}.html`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
+    pdf.setTextColor(0, 0, 0)
+    addText(reportContent.riskInterpretation, 11, true)
+    yPos += 5
+    addDivider()
+
+    // Risk Assessment Breakdown
+    addText('RISK ASSESSMENT BREAKDOWN', 14, true, [102, 126, 234])
+    addText(`Overall Diabetes Risk: ${riskScore.toFixed(1)}%`, 11, true)
+    addText(`Retinal Analysis Risk: ${(latestResult.retinal_risk || 0).toFixed(1)}%`, 10)
+    addText(`Lifestyle Factors Risk: ${(latestResult.lifestyle_risk || 0).toFixed(1)}%`, 10)
+    addText(`Confidence Score: ${((latestResult.confidence_score || 0.85) * 100).toFixed(0)}%`, 10)
+    yPos += 3
+    addDivider()
+
+    // Health Metrics
+    if (healthMetrics) {
+      addText('HEALTH METRICS ANALYSIS', 14, true, [102, 126, 234])
+      addText('Vital Signs:', 12, true)
+      healthMetrics.vitals.forEach(metric => {
+        addText(`${metric.label}: ${metric.value} ${metric.unit || ''}`, 10)
+      })
+
+      if (healthMetrics.lifestyle) {
+        yPos += 3
+        addText('Lifestyle Factors:', 12, true)
+        healthMetrics.lifestyle.forEach(metric => {
+          addText(`${metric.label}: ${metric.value} ${metric.unit || ''}`, 10)
+        })
+      }
+      yPos += 3
+      addDivider()
+    }
+
+    // Personalized Insights
+    addText('PERSONALIZED HEALTH INSIGHTS', 14, true, [102, 126, 234])
+    reportContent.insights.forEach(insight => {
+      pdf.setFillColor(240, 244, 255)
+      const textLines = pdf.splitTextToSize(insight, contentWidth - 10)
+      const boxHeight = textLines.length * 5 + 6
+
+      if (yPos + boxHeight > pageHeight - margin) {
+        pdf.addPage()
+        yPos = margin
+      }
+
+      pdf.roundedRect(margin, yPos, contentWidth, boxHeight, 2, 2, 'F')
+      pdf.setDrawColor(102, 126, 234)
+      pdf.setLineWidth(1)
+      pdf.line(margin, yPos, margin, yPos + boxHeight)
+
+      yPos += 5
+      textLines.forEach(line => {
+        pdf.setTextColor(0, 0, 0)
+        pdf.setFontSize(10)
+        pdf.text(line, margin + 5, yPos)
+        yPos += 5
+      })
+      yPos += 3
+    })
+    addDivider()
+
+    // Detailed Recommendations
+    addText('DETAILED RECOMMENDATIONS', 14, true, [102, 126, 234])
+    reportContent.recommendations.forEach(rec => {
+      addText(rec.category, 12, true)
+      rec.items.forEach(item => {
+        addText(`• ${item}`, 10)
+      })
+      yPos += 3
+    })
+    addDivider()
+
+    // Next Steps
+    addText('IMMEDIATE NEXT STEPS', 14, true, [102, 126, 234])
+    pdf.setFillColor(255, 248, 225)
+    const nextStepsHeight = reportContent.nextSteps.length * 8 + 10
+
+    if (yPos + nextStepsHeight > pageHeight - margin) {
+      pdf.addPage()
+      yPos = margin
+    }
+
+    pdf.roundedRect(margin, yPos, contentWidth, nextStepsHeight, 2, 2, 'F')
+    yPos += 5
+    reportContent.nextSteps.forEach(step => {
+      addText(`✓ ${step}`, 10, true)
+    })
+
+    // Footer
+    yPos = pageHeight - 25
+    pdf.setFontSize(8)
+    pdf.setTextColor(100, 100, 100)
+    pdf.setFont('helvetica', 'normal')
+    const disclaimer = 'Disclaimer: This report is generated by an AI-powered system for informational purposes only. It does not constitute medical advice. Please consult with qualified healthcare professionals for diagnosis and treatment.'
+    const disclaimerLines = pdf.splitTextToSize(disclaimer, contentWidth)
+    disclaimerLines.forEach(line => {
+      pdf.text(line, margin, yPos)
+      yPos += 3
+    })
+
+    pdf.text(`Powered by: DIAVITA - See Clearly & Live Freely | ${new Date().getFullYear()}`, pageWidth / 2, yPos + 3, { align: 'center' })
+
+    // Save the PDF
+    pdf.save(`diavita-report-${new Date().toISOString().split('T')[0]}.pdf`)
   }
 
   // Generate CSV report
