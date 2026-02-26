@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { register } from '../services/auth'
+import logo from '../assets/logo.jpg'
 import './RegisterPage.css'
 
 function RegisterPage() {
@@ -81,8 +82,10 @@ function RegisterPage() {
     <div className="register-container">
       <div className="register-box">
         <div className="register-header">
-          <h1>Create Account</h1>
-          <p>Join Diabetes Detection AI</p>
+          <img src={logo} alt="Diavita Logo" className="register-logo" style={{ width: '120px', height: 'auto', margin: '0 auto 1rem' }} />
+          <h1>DIAVITA</h1>
+          <p className="tagline" style={{ fontSize: '0.9rem', color: '#667eea', fontWeight: '600', marginBottom: '0.5rem' }}>See Clearly & Live Freely</p>
+          <p>Create your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="register-form">
