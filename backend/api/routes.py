@@ -8,6 +8,7 @@ from api.auth_routes import auth_bp
 from api.history_routes import history_bp
 from api.results_routes import results_bp
 from api.plans_routes import plans_bp
+from api.reports_routes import reports_bp
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -25,6 +26,7 @@ def register_routes(app: Flask):
     app.register_blueprint(history_bp, url_prefix='/api/history')
     app.register_blueprint(results_bp, url_prefix='/api/results')
     app.register_blueprint(plans_bp, url_prefix='/api/plans')
+    app.register_blueprint(reports_bp, url_prefix='/api/reports')
     app.register_blueprint(retinal_bp, url_prefix='/api/retinal')
     app.register_blueprint(lifestyle_bp, url_prefix='/api/lifestyle')
     app.register_blueprint(advice_bp, url_prefix='/api/advice')

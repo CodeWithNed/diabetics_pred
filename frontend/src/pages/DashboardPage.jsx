@@ -200,8 +200,55 @@ function DashboardPage() {
     return steps[category] || steps.moderate
   }
 
-  // Generate PDF report with rich content
+  // Generate PDF report using backend LLM
   const downloadPDF = async () => {
+    if (!latestResult) {
+      alert('No analysis results available')
+      return
+    }
+
+    try {
+      // Get the latest result ID
+      const resultId = latestResult.id
+
+      if (!resultId) {
+        alert('Unable to identify result ID')
+        return
+      }
+
+      // Call backend to generate LLM-powered PDF
+      const token = localStorage.getItem('token')
+      const response = await fetch(`http://localhost:5001/api/reports/generate-pdf/${resultId}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF report')
+      }
+
+      // Download the PDF
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `DIAVITA-Health-Report-${new Date().toISOString().split('T')[0]}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+
+    } catch (error) {
+      console.error('PDF generation failed:', error)
+      alert('Failed to generate PDF report. Please try again.')
+    }
+  }
+
+  // Keep old client-side PDF as fallback (commented out)
+  const downloadPDFClientSide = async () => {
     if (!latestResult) return
 
     const reportContent = generateReportContent()
@@ -223,7 +270,7 @@ function DashboardPage() {
       const lines = pdf.splitTextToSize(text, contentWidth)
 
       lines.forEach(line => {
-        if (yPos > pageHeight - margin) {
+        if (yPos > pageHeight - margin - 10) {
           pdf.addPage()
           yPos = margin
         }
@@ -309,13 +356,17 @@ function DashboardPage() {
     }
 
     // Personalized Insights
+    if (yPos > pageHeight - margin - 50) {
+      pdf.addPage()
+      yPos = margin
+    }
     addText('PERSONALIZED HEALTH INSIGHTS', 14, true, [102, 126, 234])
     reportContent.insights.forEach(insight => {
       pdf.setFillColor(240, 244, 255)
       const textLines = pdf.splitTextToSize(insight, contentWidth - 10)
       const boxHeight = textLines.length * 5 + 6
 
-      if (yPos + boxHeight > pageHeight - margin) {
+      if (yPos + boxHeight > pageHeight - margin - 10) {
         pdf.addPage()
         yPos = margin
       }
@@ -337,8 +388,16 @@ function DashboardPage() {
     addDivider()
 
     // Detailed Recommendations
+    if (yPos > pageHeight - margin - 50) {
+      pdf.addPage()
+      yPos = margin
+    }
     addText('DETAILED RECOMMENDATIONS', 14, true, [102, 126, 234])
     reportContent.recommendations.forEach(rec => {
+      if (yPos > pageHeight - margin - 40) {
+        pdf.addPage()
+        yPos = margin
+      }
       addText(rec.category, 12, true)
       rec.items.forEach(item => {
         addText(`• ${item}`, 10)
@@ -348,11 +407,15 @@ function DashboardPage() {
     addDivider()
 
     // Next Steps
+    if (yPos > pageHeight - margin - 50) {
+      pdf.addPage()
+      yPos = margin
+    }
     addText('IMMEDIATE NEXT STEPS', 14, true, [102, 126, 234])
     pdf.setFillColor(255, 248, 225)
     const nextStepsHeight = reportContent.nextSteps.length * 8 + 10
 
-    if (yPos + nextStepsHeight > pageHeight - margin) {
+    if (yPos + nextStepsHeight > pageHeight - margin - 10) {
       pdf.addPage()
       yPos = margin
     }
@@ -362,23 +425,136 @@ function DashboardPage() {
     reportContent.nextSteps.forEach(step => {
       addText(`✓ ${step}`, 10, true)
     })
+    yPos += 5
+    addDivider()
 
-    // Footer
-    yPos = pageHeight - 25
+    // Risk Factor Analysis
+    if (yPos > pageHeight - margin - 60) {
+      pdf.addPage()
+      yPos = margin
+    }
+    addText('RISK FACTOR ANALYSIS', 14, true, [102, 126, 234])
+
+    const riskFactors = []
+    if (healthMetrics) {
+      healthMetrics.vitals.forEach(metric => {
+        if (metric.label === 'Blood Pressure' && metric.value !== '120/80') {
+          riskFactors.push(`Blood Pressure: ${metric.value} - Monitor closely`)
+        }
+        if (metric.label === 'Glucose' && parseFloat(metric.value) > 100) {
+          riskFactors.push(`Blood Glucose: ${metric.value} ${metric.unit} - Above normal range`)
+        }
+        if (metric.label === 'BMI' && parseFloat(metric.value) >= 25) {
+          riskFactors.push(`BMI: ${metric.value} - Weight management recommended`)
+        }
+        if (metric.label === 'HbA1c' && parseFloat(metric.value) >= 5.7) {
+          riskFactors.push(`HbA1c: ${metric.value}% - Pre-diabetic range detected`)
+        }
+      })
+
+      if (healthMetrics.lifestyle) {
+        healthMetrics.lifestyle.forEach(metric => {
+          if (metric.label === 'Exercise' && parseFloat(metric.value) < 150) {
+            riskFactors.push(`Physical Activity: ${metric.value} ${metric.unit} - Below recommended 150 min/week`)
+          }
+          if (metric.label === 'Sleep' && (parseFloat(metric.value) < 7 || parseFloat(metric.value) > 9)) {
+            riskFactors.push(`Sleep: ${metric.value} ${metric.unit} - Suboptimal sleep duration`)
+          }
+          if (metric.label === 'Retinal' && metric.value === 'Alert') {
+            riskFactors.push(`Retinal Health: Alert - Eye examination recommended`)
+          }
+        })
+      }
+    }
+
+    if (riskFactors.length > 0) {
+      riskFactors.forEach(factor => {
+        addText(`• ${factor}`, 10)
+      })
+    } else {
+      addText('No significant risk factors identified. Maintain current health practices.', 10)
+    }
+    yPos += 3
+    addDivider()
+
+    // Timeline & Prognosis
+    if (yPos > pageHeight - margin - 60) {
+      pdf.addPage()
+      yPos = margin
+    }
+    addText('RISK PROGRESSION TIMELINE', 14, true, [102, 126, 234])
+    addText('Projected risk if no intervention:', 11, true)
+    addText(`• 6 months: ${Math.min(100, riskScore + 5).toFixed(1)}% (↑ +5%)`, 10, false, [255, 87, 34])
+    addText(`• 12 months: ${Math.min(100, riskScore + 12).toFixed(1)}% (↑ +12%)`, 10, false, [255, 87, 34])
+    addText(`• 24 months: ${Math.min(100, riskScore + 20).toFixed(1)}% (↑ +20%)`, 10, false, [255, 87, 34])
+
+    yPos += 5
+    addText('Projected risk with lifestyle intervention:', 11, true)
+    addText(`• 3 months: ${Math.max(0, riskScore - 8).toFixed(1)}% (↓ -8%)`, 10, false, [76, 175, 80])
+    addText(`• 6 months: ${Math.max(0, riskScore - 18).toFixed(1)}% (↓ -18%)`, 10, false, [76, 175, 80])
+    addText(`• 12 months: ${Math.max(0, riskScore - 30).toFixed(1)}% (↓ -30%)`, 10, false, [76, 175, 80])
+    yPos += 5
+    addDivider()
+
+    // Understanding Your Results
+    if (yPos > pageHeight - margin - 60) {
+      pdf.addPage()
+      yPos = margin
+    }
+    addText('UNDERSTANDING YOUR RESULTS', 14, true, [102, 126, 234])
+    addText('This assessment combines:', 11, true)
+    addText('• Retinal image analysis using AI-powered deep learning models', 10)
+    addText('• Lifestyle and metabolic risk factor evaluation', 10)
+    addText('• Clinical data integration for comprehensive risk scoring', 10)
+    yPos += 3
+
+    addText('What your score means:', 11, true)
+    addText(`Your ${riskScore.toFixed(1)}% risk score represents the probability of developing diabetes-related complications within the next 5-10 years if current health patterns continue unchanged.`, 10)
+    yPos += 5
+    addDivider()
+
+    // Key Resources & Support
+    if (yPos > pageHeight - margin - 60) {
+      pdf.addPage()
+      yPos = margin
+    }
+    addText('RESOURCES & SUPPORT', 14, true, [102, 126, 234])
+    addText('Recommended Actions:', 11, true)
+    addText('1. Share this report with your primary care physician', 10)
+    addText('2. Consider diabetes prevention programs in your area', 10)
+    addText('3. Join support groups or online communities for motivation', 10)
+    addText('4. Track your progress using health monitoring apps', 10)
+    addText('5. Schedule regular follow-up assessments every 3-6 months', 10)
+    yPos += 5
+    addDivider()
+
+    // Final Page - Disclaimer and Footer
+    if (yPos > pageHeight - 40) {
+      pdf.addPage()
+      yPos = margin
+    } else {
+      yPos = pageHeight - 40
+    }
+
     pdf.setFontSize(8)
     pdf.setTextColor(100, 100, 100)
     pdf.setFont('helvetica', 'normal')
-    const disclaimer = 'Disclaimer: This report is generated by an AI-powered system for informational purposes only. It does not constitute medical advice. Please consult with qualified healthcare professionals for diagnosis and treatment.'
+    const disclaimer = 'DISCLAIMER: This report is generated by an AI-powered system for informational and educational purposes only. It does not constitute medical advice, diagnosis, or treatment. The risk assessments are statistical predictions based on available data and should not replace professional medical consultation. Always consult with qualified healthcare professionals for personalized medical advice, diagnosis, and treatment. Individual results may vary.'
     const disclaimerLines = pdf.splitTextToSize(disclaimer, contentWidth)
     disclaimerLines.forEach(line => {
       pdf.text(line, margin, yPos)
-      yPos += 3
+      yPos += 3.5
     })
 
-    pdf.text(`Powered by: DIAVITA - See Clearly & Live Freely | ${new Date().getFullYear()}`, pageWidth / 2, yPos + 3, { align: 'center' })
+    yPos += 2
+    pdf.setFontSize(9)
+    pdf.setFont('helvetica', 'bold')
+    pdf.text(`Powered by DIAVITA - AI-Driven Diabetes Prevention | ${new Date().getFullYear()}`, pageWidth / 2, yPos, { align: 'center' })
+    pdf.setFont('helvetica', 'normal')
+    pdf.text('See Clearly & Live Freely', pageWidth / 2, yPos + 4, { align: 'center' })
 
     // Save the PDF
-    pdf.save(`diavita-report-${new Date().toISOString().split('T')[0]}.pdf`)
+    pdf.save(`DIAVITA-Health-Report-${new Date().toISOString().split('T')[0]}.pdf`)
   }
 
   // Generate CSV report
@@ -592,43 +768,39 @@ function DashboardPage() {
             <div className="risk-hero-card">
               <div className="risk-visualization">
                 <motion.div className="risk-circle-wrapper"
-                  whileHover={{ scale: 1.05 }}
+                  initial={{ scale: 0.9 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  <svg className="risk-circle" viewBox="0 0 250 250">
-                    <defs>
-                      <linearGradient id="riskGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#FF416C" />
-                        <stop offset="100%" stopColor="#FF4B2B" />
-                      </linearGradient>
-                    </defs>
+                  <svg className="progress-ring" width="280" height="280" viewBox="0 0 280 280">
                     <circle
-                      cx="125" cy="125" r="110"
+                      cx="140"
+                      cy="140"
+                      r="110"
                       fill="none"
-                      stroke="rgba(255, 255, 255, 0.1)"
-                      strokeWidth="20"
+                      stroke="#f0f0f0"
+                      strokeWidth="18"
                     />
                     <motion.circle
-                      cx="125" cy="125" r="110"
+                      cx="140"
+                      cy="140"
+                      r="110"
                       fill="none"
-                      stroke="url(#riskGradient)"
-                      strokeWidth="20"
-                      strokeLinecap="round"
+                      stroke={riskScore < 50 ? '#4CAF50' : riskScore < 75 ? '#FF9800' : '#FF5722'}
+                      strokeWidth="18"
                       strokeDasharray={`${2 * Math.PI * 110}`}
                       initial={{ strokeDashoffset: 2 * Math.PI * 110 }}
                       animate={{ strokeDashoffset: 2 * Math.PI * 110 * (1 - riskScore / 100) }}
+                      transform="rotate(-90 140 140)"
                       transition={{ duration: 2, ease: "easeInOut" }}
                     />
+                    <text x="140" y="150" textAnchor="middle" fontSize="48" fontWeight="700" fill={riskScore < 50 ? '#4CAF50' : riskScore < 75 ? '#FF9800' : '#FF5722'}>
+                      {riskScore.toFixed(0)}%
+                    </text>
+                    <text x="140" y="175" textAnchor="middle" fontSize="16" fill="#999">
+                      Risk Score
+                    </text>
                   </svg>
-                  <div className="risk-score-display">
-                    <motion.span className="risk-number"
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 1 }}
-                    >
-                      {riskScore.toFixed(0)}
-                    </motion.span>
-                    <span className="risk-percent">%</span>
-                  </div>
                 </motion.div>
 
                 <div className="risk-info">
@@ -664,14 +836,14 @@ function DashboardPage() {
                   <div className="breakdown-item" style={{ textAlign: 'center' }}>
                     <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Retinal Analysis</span>
                     <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#6366f1' }}>
-                      {(latestResult.retinal_risk || 0).toFixed(0)}%
+                      {(latestResult.retinal_risk || 0).toFixed(2)}%
                     </span>
                   </div>
 
                   <div className="breakdown-item" style={{ textAlign: 'center' }}>
                     <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Lifestyle Factors</span>
                     <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#10b981' }}>
-                      {(latestResult.lifestyle_risk || 0).toFixed(0)}%
+                      {(latestResult.lifestyle_risk || 0).toFixed(2)}%
                     </span>
                   </div>
                 </div>
@@ -841,7 +1013,7 @@ function DashboardPage() {
                           <span style={{ fontSize: '0.9rem', color: '#6b7280' }}>Progress</span>
                         </div>
                         <div className="progress-display" style={{ fontSize: '2rem', fontWeight: 'bold', color: '#667eea' }}>
-                          {primaryPlan.current_progress}%
+                          {Number(primaryPlan.current_progress).toFixed(2)}%
                         </div>
                       </div>
 
@@ -893,10 +1065,10 @@ function DashboardPage() {
                   </button>
 
                   <button className="quick-action-item"
-                    onClick={() => navigate('/simulations')}
+                    onClick={() => navigate('/plans')}
                   >
-                    <Activity size={20} />
-                    <span>What-If Scenarios</span>
+                    <Target size={20} />
+                    <span>Health Plans</span>
                     <ChevronRight size={16} />
                   </button>
                 </div>

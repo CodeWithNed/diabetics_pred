@@ -24,6 +24,9 @@ joblib
 requests
 aiohttp
 
+# PDF Generation
+reportlab
+
 # Utilities
 pytest
 pytest-asyncio

@@ -107,7 +107,7 @@
 
 .onboarding-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-bottom: 3rem;
 }
@@ -195,33 +195,45 @@
 
 .risk-circle-wrapper {
   position: relative;
-  width: 250px;
-  height: 250px;
+  width: 280px;
+  height: 280px;
+  display: grid;
+  place-items: center;
 }
 
 .risk-circle {
+  position: absolute;
   width: 100%;
   height: 100%;
   transform: rotate(-90deg);
+  top: 0;
+  left: 0;
 }
 
 .risk-score-display {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.risk-value-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
 .risk-number {
-  font-size: 4rem;
+  font-size: 3rem;
   font-weight: 800;
   color: #1a1a2e;
   line-height: 1;
 }
 
 .risk-percent {
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #6b7280;
   font-weight: 600;
 }
