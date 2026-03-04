@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import { Upload, User, Activity, Heart, ArrowRight, Loader, Ruler, Weight, Info, Moon, Coffee, Dumbbell, Brain, Apple, Cigarette, FlaskConical, ChevronDown, ChevronUp } from 'lucide-react'
+import { Upload, User, Activity, Heart, ArrowRight, Loader, Ruler, Weight, Info, Moon, Coffee, Dumbbell, Brain, Apple, Cigarette, FlaskConical, ChevronDown, ChevronUp, Eye, AlertTriangle, X } from 'lucide-react'
 import { analyzeComplete } from '../services/api'
 import { saveAnalysisResult } from '../services/results'
 import { getPrimaryPlan } from '../services/plans'
@@ -60,6 +60,9 @@ function AnalysisPage() {
   const [showScenarios, setShowScenarios] = useState(true) // Toggle for showing/hiding scenarios
   const [activeTab, setActiveTab] = useState('basic') // Tab state for lifestyle data
   const [inputErrors, setInputErrors] = useState({}) // Track validation errors for inputs
+  const [showRetinalConfirmModal, setShowRetinalConfirmModal] = useState(false)
+  const [pendingImageFile, setPendingImageFile] = useState(null)
+  const [pendingImagePreview, setPendingImagePreview] = useState(null)
 
   // Pre-defined scenarios for testing
   const scenarios = {
@@ -242,20 +245,11 @@ function AnalysisPage() {
             return
           }
 
-          // Check aspect ratio (retinal images are usually square-ish)
-          const aspectRatio = img.width / img.height
-          if (aspectRatio < 0.5 || aspectRatio > 2) {
-            if (!window.confirm('This image has an unusual aspect ratio for a retinal image. Are you sure this is a retinal fundus image?')) {
-              e.target.value = null // Reset input
-              setImage(null)
-              setImagePreview(null)
-              return
-            }
-          }
-
-          // If all checks pass, set the image
-          setImage(file)
-          setImagePreview(reader.result)
+          // Show confirmation modal for retinal image verification
+          setPendingImageFile(file)
+          setPendingImagePreview(reader.result)
+          setShowRetinalConfirmModal(true)
+          e.target.value = null // Reset file input
         }
 
         img.onerror = () => {
@@ -269,6 +263,20 @@ function AnalysisPage() {
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  const confirmRetinalImage = () => {
+    setImage(pendingImageFile)
+    setImagePreview(pendingImagePreview)
+    setShowRetinalConfirmModal(false)
+    setPendingImageFile(null)
+    setPendingImagePreview(null)
+  }
+
+  const cancelRetinalImage = () => {
+    setShowRetinalConfirmModal(false)
+    setPendingImageFile(null)
+    setPendingImagePreview(null)
   }
 
   const handleInputChange = (field, value) => {
@@ -1469,6 +1477,78 @@ function AnalysisPage() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Retinal Image Confirmation Modal - Outside container for proper z-index */}
+      <AnimatePresence>
+        {showRetinalConfirmModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={cancelRetinalImage}
+          >
+            <motion.div
+              className="modal-content retinal-confirm-modal"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button className="modal-close" onClick={cancelRetinalImage}>
+                <X size={20} />
+              </button>
+
+              <div className="modal-header">
+                <div className="modal-icon">
+                  <Eye size={32} />
+                </div>
+                <h3>Confirm Retinal Image</h3>
+              </div>
+
+              <div className="modal-body">
+                {pendingImagePreview && (
+                  <div className="preview-container">
+                    <img src={pendingImagePreview} alt="Uploaded preview" />
+                  </div>
+                )}
+
+                <div className="warning-box">
+                  <AlertTriangle size={20} />
+                  <div>
+                    <p className="warning-title">Is this a retinal fundus image?</p>
+                    <p className="warning-text">
+                      This tool is designed for retinal fundus images taken with specialized eye cameras.
+                      Regular camera photos will not produce accurate results.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="info-box">
+                  <strong>Retinal images should show:</strong>
+                  <ul>
+                    <li>Circular view of the back of the eye</li>
+                    <li>Blood vessels radiating from the center</li>
+                    <li>Optic disc (bright spot) and macula visible</li>
+                    <li>Red/orange coloration</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="modal-actions">
+                <button className="btn-cancel" onClick={cancelRetinalImage}>
+                  <X size={18} />
+                  Cancel - Choose Different Image
+                </button>
+                <button className="btn-confirm" onClick={confirmRetinalImage}>
+                  <Eye size={18} />
+                  Yes, This is a Retinal Image
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

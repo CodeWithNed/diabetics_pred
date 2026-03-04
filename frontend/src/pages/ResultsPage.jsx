@@ -234,31 +234,31 @@ function ResultsPage() {
               <div className="result-detail">
                 {/* Risk Score Display */}
                 <div className="risk-visualization">
-                  <svg className="progress-ring" width="200" height="200">
+                  <svg className="progress-ring" width="280" height="280" viewBox="0 0 280 280">
                     <circle
-                      cx="100"
-                      cy="100"
-                      r="80"
+                      cx="140"
+                      cy="140"
+                      r="110"
                       fill="none"
                       stroke="#f0f0f0"
-                      strokeWidth="16"
+                      strokeWidth="18"
                     />
                     <circle
-                      cx="100"
-                      cy="100"
-                      r="80"
+                      cx="140"
+                      cy="140"
+                      r="110"
                       fill="none"
                       stroke={getRiskColor(riskData.combined_risk)}
-                      strokeWidth="16"
-                      strokeDasharray={`${2 * Math.PI * 80}`}
-                      strokeDashoffset={`${2 * Math.PI * 80 * (1 - riskData.combined_risk / 100)}`}
-                      transform="rotate(-90 100 100)"
+                      strokeWidth="18"
+                      strokeDasharray={`${2 * Math.PI * 110}`}
+                      strokeDashoffset={`${2 * Math.PI * 110 * (1 - riskData.combined_risk / 100)}`}
+                      transform="rotate(-90 140 140)"
                       style={{ transition: 'stroke-dashoffset 0.8s ease' }}
                     />
-                    <text x="100" y="95" textAnchor="middle" fontSize="36" fontWeight="700" fill={getRiskColor(riskData.combined_risk)}>
-                      {riskData.combined_risk?.toFixed(1)}%
+                    <text x="140" y="150" textAnchor="middle" fontSize="48" fontWeight="700" fill={getRiskColor(riskData.combined_risk)}>
+                      {riskData.combined_risk?.toFixed(0)}%
                     </text>
-                    <text x="100" y="115" textAnchor="middle" fontSize="14" fill="#999">
+                    <text x="140" y="175" textAnchor="middle" fontSize="16" fill="#999">
                       Risk Score
                     </text>
                   </svg>
