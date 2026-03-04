@@ -96,6 +96,7 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-size: 1.3em;
 }
 
 .welcome-subtitle {
@@ -105,50 +106,61 @@
   font-weight: 400;
 }
 
-.onboarding-cards {
+.info-section {
+  margin: 2.5rem 0;
+}
+
+.info-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 2rem;
   margin-bottom: 3rem;
 }
 
-.onboarding-card {
+.info-card {
   background: white;
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
-  cursor: pointer;
 }
 
-.onboarding-card:hover {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  border-color: #667eea;
-}
-
-.card-icon-wrapper {
-  width: 60px;
-  height: 60px;
+.info-icon {
+  width: 56px;
+  height: 56px;
   background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1rem;
+  margin-bottom: 1.25rem;
   color: #667eea;
 }
 
-.onboarding-card h4 {
-  font-size: 1.2rem;
+.info-card h4 {
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1a1a2e;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
 }
 
-.onboarding-card p {
+.info-card p {
   color: #6b7280;
   font-size: 0.95rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.info-stat-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .start-assessment-btn {
@@ -745,7 +757,7 @@
     flex-direction: column;
   }
 
-  .onboarding-cards {
+  .info-cards {
     grid-template-columns: 1fr;
   }
 }
