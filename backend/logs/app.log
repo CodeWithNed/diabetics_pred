@@ -3676,3 +3676,221 @@ KeyError: 'JWT_TOKEN_LOCATION'
 2026-03-04 04:59:36 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8431083352425994
 2026-03-04 04:59:36 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 2
 2026-03-04 04:59:50 - diabetes_ai.api.auth_routes - INFO - User logged out: user344
+2026-03-05 03:35:08 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-05 03:35:08 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-05 03:35:43 - diabetes_ai.api.auth_routes - INFO - User logged in: user1344
+2026-03-05 03:35:55 - diabetes_ai.api.auth_routes - INFO - User logged out: user1344
+2026-03-05 03:35:58 - diabetes_ai.api.auth_routes - INFO - User logged in: user1
+2026-03-05 03:36:25 - app - ERROR - Exception on /api/reports/generate-pdf/15 [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 167, in decorator
+    verify_jwt_in_request(
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 94, in verify_jwt_in_request
+    jwt_data, jwt_header, jwt_location = _decode_jwt_from_request(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 310, in _decode_jwt_from_request
+    locations = config.token_location
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/config.py", line 44, in token_location
+    locations = current_app.config["JWT_TOKEN_LOCATION"]
+                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'JWT_TOKEN_LOCATION'
+2026-03-05 03:36:25 - app - ERROR - Internal error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2026-03-05 03:36:49 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-05 03:36:49 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-05 03:36:49 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-05 03:36:49 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-05 03:36:49 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-05 03:36:50 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-05 03:36:50 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-05 03:36:50 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-05 03:36:50 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-05 03:36:50 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-05 03:36:50 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-03-05 03:36:50 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-05 03:36:50 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-03-05 03:36:50 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-05 03:36:50 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-05 03:36:50 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.76s
+2026-03-05 03:36:50 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-05 03:36:50 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-03-05 03:36:50 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-05 03:36:50 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-03-05 03:36:50 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 6
+2026-03-05 03:37:54 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 6: Stress & Sleep Recovery Program
+2026-03-05 03:38:01 - diabetes_ai.api.auth_routes - INFO - User logged out: user1
+2026-03-05 03:38:04 - diabetes_ai.api.auth_routes - INFO - User logged in: user1344
+2026-03-05 03:57:00 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-05 03:57:00 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-05 03:57:36 - diabetes_ai.api.auth_routes - INFO - User logged out: user1344
+2026-03-05 03:57:56 - diabetes_ai.api.auth_routes - INFO - New user registered: user11 (normal)
+2026-03-05 03:58:02 - diabetes_ai.api.auth_routes - INFO - User logged in: user11
+2026-03-05 03:58:20 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-05 03:58:20 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-05 03:58:20 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-05 03:58:20 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-05 03:58:20 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-05 03:58:21 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-05 03:58:21 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-05 03:58:21 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-05 03:58:21 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-05 03:58:21 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-05 03:58:21 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-03-05 03:58:21 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-05 03:58:21 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-03-05 03:58:21 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-05 03:58:21 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-05 03:58:21 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.76s
+2026-03-05 03:58:21 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-05 03:58:21 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-03-05 03:58:21 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-05 03:58:21 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-03-05 03:58:21 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 7
+2026-03-05 03:58:29 - diabetes_ai.api.auth_routes - INFO - User logged out: user11
+2026-03-05 03:58:33 - diabetes_ai.api.auth_routes - INFO - User logged in: user11
+2026-03-05 03:58:35 - app - ERROR - Exception on /api/reports/generate-pdf/17 [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 167, in decorator
+    verify_jwt_in_request(
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 94, in verify_jwt_in_request
+    jwt_data, jwt_header, jwt_location = _decode_jwt_from_request(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 339, in _decode_jwt_from_request
+    encoded_token, csrf_token = get_encoded_token_function()
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 190, in _decode_jwt_from_headers
+    header_name = config.header_name
+                  ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/config.py", line 80, in header_name
+    name = current_app.config["JWT_HEADER_NAME"]
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'JWT_HEADER_NAME'
+2026-03-05 03:58:35 - app - ERROR - Internal error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2026-03-05 03:58:38 - app - ERROR - Exception on /api/reports/generate-pdf/17 [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 167, in decorator
+    verify_jwt_in_request(
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 94, in verify_jwt_in_request
+    jwt_data, jwt_header, jwt_location = _decode_jwt_from_request(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 339, in _decode_jwt_from_request
+    encoded_token, csrf_token = get_encoded_token_function()
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 190, in _decode_jwt_from_headers
+    header_name = config.header_name
+                  ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/config.py", line 80, in header_name
+    name = current_app.config["JWT_HEADER_NAME"]
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+KeyError: 'JWT_HEADER_NAME'
+2026-03-05 03:58:38 - app - ERROR - Internal error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2026-03-05 04:00:56 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-05 04:00:56 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-05 04:02:18 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-05 04:02:18 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-05 04:10:38 - diabetes_ai.api.auth_routes - INFO - User logged in: user344
+2026-03-05 04:10:45 - app - ERROR - Exception on /api/reports/generate-pdf/14 [GET]
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 167, in decorator
+    verify_jwt_in_request(
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 94, in verify_jwt_in_request
+    jwt_data, jwt_header, jwt_location = _decode_jwt_from_request(
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/view_decorators.py", line 340, in _decode_jwt_from_request
+    decoded_token = decode_token(encoded_token, csrf_token)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/utils.py", line 127, in decode_token
+    jwt_manager = get_jwt_manager()
+                  ^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/flask_jwt_extended/internal_utils.py", line 31, in get_jwt_manager
+    raise RuntimeError(
+RuntimeError: You must initialize a JWTManager with this flask application before using this method
+2026-03-05 04:10:45 - app - ERROR - Internal error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2026-03-05 04:12:45 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-05 04:12:45 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-05 04:14:01 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01jmta9kg1fv2rzvzv7jjt9edq` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7490, Requested 775. Please try again in 1.9875s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","type":"tokens","code":"rate_limit_exceeded"}}
+
+2026-03-05 04:14:01 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 429
+2026-03-05 04:14:19 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 2: Stress & Sleep Recovery Program
+2026-03-05 04:14:33 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-05 04:14:33 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-05 04:14:33 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-05 04:14:33 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-05 04:14:33 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-05 04:14:34 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-05 04:14:34 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-05 04:14:34 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.11
+2026-03-05 04:14:34 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-05 04:14:34 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-05 04:14:34 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.21, Level: low
+2026-03-05 04:14:34 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-05 04:14:34 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.20847880675648947
+2026-03-05 04:14:35 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.19s
+2026-03-05 04:14:35 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-05 04:14:35 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.20847880675648947
+2026-03-05 04:14:35 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-05 04:14:35 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.20847880675648947
+2026-03-05 04:14:35 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 2
+2026-03-05 04:15:07 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 2: Stress & Sleep Recovery Program

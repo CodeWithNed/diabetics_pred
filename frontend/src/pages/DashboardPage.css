@@ -91,11 +91,14 @@
   line-height: 1.2;
 }
 
-.user-name {
+.welcome-user-name {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  font-size: 3.5rem;
+  display: block;
+  margin-top: 0.5rem;
 }
 
 .welcome-subtitle {
@@ -118,12 +121,6 @@
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
-  cursor: pointer;
-}
-
-.onboarding-card:hover {
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  border-color: #667eea;
 }
 
 .card-icon-wrapper {

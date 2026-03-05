@@ -2,10 +2,10 @@
 Reports API Routes - Generate comprehensive PDF reports using LLM
 """
 from flask import Blueprint, request, jsonify, send_file
-from flask_jwt_extended import jwt_required, get_jwt_identity
 from models.database import db
 from models.database.user import User
 from models.database.analysis_result import AnalysisResult
+from utils.auth import jwt_required
 from models.llm.llm_interface import GroqLLMInterface
 from reportlab.lib.pagesizes import letter, A4
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -35,13 +35,14 @@ def run_async(coro):
     return loop.run_until_complete(coro)
 
 @reports_bp.route('/generate-pdf/<int:result_id>', methods=['GET'])
-@jwt_required()
+@jwt_required
 def generate_pdf_report(result_id):
     """
     Generate a comprehensive PDF report using LLM for personalized content
     """
     try:
-        user_id = get_jwt_identity()
+        current_user = request.current_user
+        user_id = current_user['user_id']
         user = User.query.get(user_id)
 
         if not user:

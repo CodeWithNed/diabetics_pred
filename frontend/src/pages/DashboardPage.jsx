@@ -689,7 +689,7 @@ function DashboardPage() {
               </motion.div>
               <h1 className="welcome-title">
                 Welcome back,
-                <span className="user-name"> {user?.username}</span>
+                <span className="welcome-user-name"> {user?.username}</span>
               </h1>
               <p className="welcome-subtitle">
                 Let's begin your diabetes risk assessment with our AI-powered health analysis
@@ -705,7 +705,6 @@ function DashboardPage() {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: step.delay }}
-                    whileHover={{ y: -5, scale: 1.02 }}
                   >
                     <div className="card-icon-wrapper">
                       <step.icon size={32} />
