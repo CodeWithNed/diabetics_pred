@@ -414,10 +414,10 @@
 }
 
 .scenario-item {
-  display: grid;
-  grid-template-columns: 80px 60px 60px 1fr;
-  gap: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  gap: 0.5rem;
   padding: 0.5rem;
   background: white;
   border-radius: 6px;
@@ -427,16 +427,19 @@
 .scenario-item .timeline {
   font-weight: 600;
   color: #64748b;
+  white-space: nowrap;
 }
 
 .scenario-item .new-risk {
   font-weight: 700;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .scenario-item .change {
   font-size: 0.8rem;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .scenario-item .change.negative {
@@ -451,6 +454,7 @@
   color: #475569;
   font-size: 0.8rem;
   line-height: 1.2;
+  flex: 1 1 100%;
 }
 
 .priority-low {
