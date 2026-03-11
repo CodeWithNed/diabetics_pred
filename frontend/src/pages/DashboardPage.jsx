@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   TrendingUp, TrendingDown, Activity, Target, ArrowRight, AlertCircle,
   Heart, Droplets, Brain, Eye, Zap, Moon, Scale, Clock,
-  ChevronRight, Sparkles, Shield, BarChart3, User, Download, FileText, FileSpreadsheet
+  ChevronRight, Sparkles, Shield, BarChart3, User, Download, FileText
 } from 'lucide-react'
 import jsPDF from 'jspdf'
 import Navigation from '../components/Navigation'
@@ -557,65 +557,6 @@ function DashboardPage() {
     pdf.save(`DIAVITA-Health-Report-${new Date().toISOString().split('T')[0]}.pdf`)
   }
 
-  // Generate CSV report
-  const downloadCSV = () => {
-    if (!latestResult) return
-
-    // Create CSV content
-    const csvRows = [
-      ['Diabetes Risk Assessment Report'],
-      [`Generated on: ${new Date().toLocaleDateString()}`],
-      [`Patient: ${user?.username || 'Anonymous'}`],
-      [],
-      ['Metric', 'Value', 'Unit'],
-      ['Overall Risk Score', (latestResult.combined_risk || 0).toFixed(1), '%'],
-      ['Risk Category', getRiskLabel(latestResult.risk_category), ''],
-      ['Retinal Risk', (latestResult.retinal_risk || 0).toFixed(1), '%'],
-      ['Lifestyle Risk', (latestResult.lifestyle_risk || 0).toFixed(1), '%'],
-      []
-    ]
-
-    // Add health metrics if available
-    if (healthMetrics) {
-      csvRows.push(['Health Metrics', '', ''])
-      healthMetrics.vitals.forEach(metric => {
-        csvRows.push([metric.label, metric.value, metric.unit || ''])
-      })
-      csvRows.push([])
-
-      if (healthMetrics.lifestyle) {
-        csvRows.push(['Lifestyle Factors', '', ''])
-        healthMetrics.lifestyle.forEach(metric => {
-          csvRows.push([metric.label, metric.value, metric.unit || ''])
-        })
-      }
-    }
-
-    // Add recommendations
-    csvRows.push([])
-    csvRows.push(['Recommendations'])
-    if (latestResult.recommendations) {
-      latestResult.recommendations.forEach(rec => {
-        csvRows.push([rec])
-      })
-    }
-
-    // Convert to CSV string
-    const csvContent = csvRows.map(row =>
-      row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
-    ).join('\n')
-
-    // Create blob and download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-    const url = window.URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `diabetes-risk-report-${new Date().toISOString().split('T')[0]}.csv`
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-  }
 
   // Extract user's health metrics from latest analysis
   const getUserHealthMetrics = () => {
@@ -829,21 +770,29 @@ function DashboardPage() {
                 </div>
               </div>
 
-              <div className="risk-breakdown">
-                <h3>Risk Components</h3>
-                <div className="breakdown-items" style={{ display: 'flex', gap: '2rem', justifyContent: 'center', marginTop: '1rem' }}>
-                  <div className="breakdown-item" style={{ textAlign: 'center' }}>
-                    <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Retinal Analysis</span>
-                    <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#6366f1' }}>
-                      {(latestResult.retinal_risk || 0).toFixed(2)}%
-                    </span>
-                  </div>
+              <div className="risk-breakdown" style={{ marginTop: '2rem' }}>
+                <h3 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Risk Components</h3>
+                <div style={{ display: 'flex', justifyContent: 'center', paddingLeft: '5rem' }}>
+                  <div className="breakdown-items" style={{
+                    display: 'inline-flex',
+                    gap: '0',
+                    alignItems: 'center'
+                  }}>
+                    <div className="breakdown-item" style={{ textAlign: 'center', padding: '0 3rem' }}>
+                      <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Retinal Analysis</span>
+                      <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#6366f1' }}>
+                        {(latestResult.retinal_risk || 0).toFixed(2)}%
+                      </span>
+                    </div>
 
-                  <div className="breakdown-item" style={{ textAlign: 'center' }}>
-                    <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Lifestyle Factors</span>
-                    <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#10b981' }}>
-                      {(latestResult.lifestyle_risk || 0).toFixed(2)}%
-                    </span>
+                    <div style={{ width: '2px', height: '60px', background: 'rgba(156, 163, 175, 0.3)' }}></div>
+
+                    <div className="breakdown-item" style={{ textAlign: 'center', padding: '0 3rem' }}>
+                      <span className="breakdown-label" style={{ display: 'block', fontSize: '0.9rem', color: '#9ca3af', marginBottom: '0.5rem' }}>Lifestyle Factors</span>
+                      <span className="breakdown-value" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: '#10b981' }}>
+                        {(latestResult.lifestyle_risk || 0).toFixed(2)}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -881,29 +830,6 @@ function DashboardPage() {
                   Download PDF Report
                 </button>
 
-                <button
-                  className="download-btn csv-btn"
-                  onClick={downloadCSV}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.75rem 1.5rem',
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '10px',
-                    cursor: 'pointer',
-                    fontSize: '0.95rem',
-                    fontWeight: '600',
-                    transition: 'transform 0.2s'
-                  }}
-                  onMouseEnter={e => e.target.style.transform = 'translateY(-2px)'}
-                  onMouseLeave={e => e.target.style.transform = 'translateY(0)'}
-                >
-                  <FileSpreadsheet size={18} />
-                  Download CSV Data
-                </button>
               </div>
             </div>
           </motion.div>
