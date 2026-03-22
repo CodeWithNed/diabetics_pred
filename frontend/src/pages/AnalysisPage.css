@@ -155,6 +155,11 @@
   box-shadow: var(--shadow-lg);
 }
 
+/* Fix Next button spacing in step 1 */
+.form-section > .next-button {
+  margin-top: 2rem;
+}
+
 .upload-placeholder {
   display: flex;
   flex-direction: column;
