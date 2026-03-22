@@ -473,15 +473,18 @@
 }
 
 .input-with-unit input {
-  flex: 1;
+  flex: 3;  /* Give more space to input fields */
+  min-width: 0;  /* Allow input to shrink if needed */
 }
 
 .unit-selector {
-  padding: 0.75rem;
+  flex: 0 0 auto;  /* Don't grow, only take needed space */
+  width: 80px;  /* Fixed width for consistency */
+  padding: 0.75rem 0.5rem;  /* Reduced horizontal padding */
   border: 1.5px solid var(--bg-tertiary);
   border-radius: 10px;
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 0.85rem;  /* Slightly smaller font */
   font-weight: 600;
   color: var(--primary-deep);
   background: white;
@@ -505,11 +508,12 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  flex: 1;
+  flex: 3;  /* Take more space in parent container */
 }
 
 .dual-input .small-input {
   flex: 1;
+  min-width: 60px;  /* Ensure minimum width for usability */
   font-family: var(--font-mono);
   padding: 0.75rem;
   border: 1.5px solid var(--bg-tertiary);
@@ -556,15 +560,20 @@
 /* Select Input */
 .select-input {
   width: 100%;
-  padding: 0.875rem;
+  padding: 0.875rem 2.5rem 0.875rem 1rem;  /* Adjusted padding to move arrow left */
   border: 2px solid var(--bg-tertiary);
   border-radius: 12px;
   font-family: var(--font-body);
   font-size: 1rem;
   color: var(--text-primary);
   background: white;
+  background-position: right 0.75rem center;  /* Position arrow closer to left */
+  background-size: 1.25rem;
   transition: all var(--transition-base);
   cursor: pointer;
+  appearance: none;  /* Remove default arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L2 5h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
 }
 
 .select-input:focus {
