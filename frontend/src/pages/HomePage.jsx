@@ -136,11 +136,11 @@ function HomePage() {
               </div>
               <h3>Lifestyle Analysis</h3>
               <p>
-                XGBoost model predicting diabetes risk from demographic and
+                Gradient Boost model predicting diabetes risk from demographic and
                 behavioral data with AUC &gt;0.85.
               </p>
               <div className="feature-tech">
-                <span className="tech-tag">XGBoost ML</span>
+                <span className="tech-tag">Gradient Boost ML</span>
                 <span className="tech-tag">NHANES Data</span>
               </div>
             </motion.div>
