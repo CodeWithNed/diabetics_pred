@@ -13,7 +13,7 @@ function Navigation() {
 
   const handleLogout = async () => {
     await logout()
-    navigate('/login')
+    navigate('/')  // Redirect to home page instead of login
   }
 
   const navItems = [
