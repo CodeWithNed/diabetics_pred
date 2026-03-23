@@ -197,7 +197,7 @@ transition={{ duration: 0.8 }}
 The frontend connects to a Flask backend that uses:
 - **Optimized Multimodal Fusion**: Cross-validated weights (Retinal: 10.3%, Lifestyle: 89.7%)
 - **CNN Model**: For diabetic retinopathy detection from retinal images
-- **XGBoost Model**: For lifestyle-based risk prediction
+- **Gradient Boosting Model**: For lifestyle-based risk prediction
 - **Groq LLM**: For personalized advice generation
 - **Agentic Architecture**: Multiple AI agents working in coordination
 
