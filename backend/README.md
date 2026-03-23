@@ -5,7 +5,7 @@ Multimodal AI framework for early diabetes detection using agentic architecture.
 ## Features
 
 - **Retinal Image Analysis**: CNN-based diabetic retinopathy detection
-- **Lifestyle Risk Prediction**: XGBoost model for demographic/behavioral risk assessment
+- **Lifestyle Risk Prediction**: Gradient Boosting model for demographic/behavioral risk assessment
 - **Multimodal Fusion**: Optimized weight fusion combining retinal and lifestyle predictions
 - **LLM-Powered Advice**: Personalized recommendations using Groq AI
 - **What-If Simulations**: Interactive scenarios showing impact of lifestyle changes
@@ -19,7 +19,7 @@ Backend (Agentic AI)
 ├── Orchestrator Agent (Master coordinator)
 │   │
 │   ├── Retinal Agent (CNN analysis)
-│   ├── Lifestyle Agent (XGBoost prediction)
+│   ├── Lifestyle Agent (Gradient Boosting prediction)
 │   ├── Fusion Agent (Multimodal integration)
 │   ├── LLM Agent (Groq AI advice)
 │   └── Simulation Agent (What-if scenarios)
@@ -122,7 +122,7 @@ backend/
 │
 ├── models/                 # AI/ML models
 │   ├── retinal/            # CNN models
-│   ├── lifestyle/          # XGBoost models
+│   ├── lifestyle/          # Gradient Boosting models
 │   ├── llm/                # LLM interface
 │   └── fusion/             # Fusion logic
 │       ├── ensemble.py     # Weighted fusion with optimized weights

@@ -1,4 +1,4 @@
-"""Lifestyle data analysis agent using XGBoost."""
+"""Lifestyle data analysis agent using Gradient Boosting."""
 import time
 from typing import Dict, Any
 import numpy as np
@@ -14,7 +14,7 @@ class LifestyleAgent(BaseAgent):
     """Agent responsible for lifestyle and demographic risk prediction."""
 
     def __init__(self):
-        """Initialize lifestyle agent with XGBoost model."""
+        """Initialize lifestyle agent with Gradient Boosting model."""
         super().__init__(agent_id="lifestyle_agent")
         self.model = None
         self.scaler = None
@@ -152,8 +152,8 @@ class LifestyleAgent(BaseAgent):
             features = self._engineer_features(lifestyle_data)
             self.log_action("features_engineered", features.shape)
 
-            # Run XGBoost prediction
-            logger.debug("Running XGBoost prediction")
+            # Run Gradient Boosting prediction
+            logger.debug("Running Gradient Boosting prediction")
             prediction = self._predict(features)
             self.log_action("prediction_complete", prediction)
 
