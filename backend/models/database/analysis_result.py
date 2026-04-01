@@ -36,7 +36,7 @@ class AnalysisResult(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships
-    user = db.relationship('User', backref='analysis_results')
+    user = db.relationship('User', backref=db.backref('analysis_results', passive_deletes=True))
 
     def __init__(self, user_id, analysis_type, **kwargs):
         """Initialize analysis result."""

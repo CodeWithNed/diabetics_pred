@@ -39,7 +39,7 @@ class HealthPlan(db.Model):
     completed_at = db.Column(db.DateTime)
 
     # Relationships
-    user = db.relationship('User', backref='health_plans')
+    user = db.relationship('User', backref=db.backref('health_plans', passive_deletes=True))
 
     def __init__(self, user_id, plan_name, plan_type, **kwargs):
         """Initialize health plan."""
