@@ -13,7 +13,7 @@ flask-sqlalchemy
 scikit-learn
 tensorflow== 2.20.0
 keras==3.13.1
-xgboost
+# xgboost  # Not needed - using scikit-learn's GradientBoostingClassifier instead
 opencv-python
 pillow
 numpy==2.2.6

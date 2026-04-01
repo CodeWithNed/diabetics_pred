@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getStoredUser, logout, getAllUsers, getAllHistory, deleteUser } from '../services/auth'
+import ConfirmModal from '../components/ConfirmModal'
+import NotificationModal from '../components/NotificationModal'
 import './AdminDashboard.css'
 
 function AdminDashboard() {
@@ -9,6 +11,8 @@ function AdminDashboard() {
   const [history, setHistory] = useState([])
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('users')
+  const [confirmModal, setConfirmModal] = useState({ isOpen: false, userId: null, username: '' })
+  const [notification, setNotification] = useState({ isOpen: false, type: 'success', title: '', message: '' })
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -47,16 +51,32 @@ function AdminDashboard() {
     navigate('/')  // Redirect to home page instead of login
   }
 
-  const handleDeleteUser = async (userId, username) => {
-    if (confirm(`Are you sure you want to delete user "${username}"?`)) {
-      try {
-        await deleteUser(userId)
-        setUsers(users.filter(u => u.id !== userId))
-        alert('User deleted successfully')
-      } catch (error) {
-        alert('Failed to delete user: ' + error.response?.data?.message)
-      }
+  const handleDeleteUser = (userId, username) => {
+    setConfirmModal({
+      isOpen: true,
+      userId,
+      username
+    })
+  }
+
+  const confirmDelete = async () => {
+    const { userId, username } = confirmModal
+    setConfirmModal({ isOpen: false, userId: null, username: '' })
+
+    try {
+      await deleteUser(userId)
+      setUsers(users.filter(u => u.id !== userId))
+      showNotification('success', 'Success', `User "${username}" has been deleted successfully`)
+    } catch (error) {
+      showNotification('error', 'Delete Failed', error.response?.data?.message || 'Failed to delete user')
     }
+  }
+
+  const showNotification = (type, title, message) => {
+    setNotification({ isOpen: true, type, title, message })
+    setTimeout(() => {
+      setNotification({ isOpen: false, type: 'success', title: '', message: '' })
+    }, 4000)
   }
 
   if (loading) {
@@ -183,6 +203,25 @@ function AdminDashboard() {
           </div>
         )}
       </div>
+
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        onClose={() => setConfirmModal({ isOpen: false, userId: null, username: '' })}
+        onConfirm={confirmDelete}
+        title="Delete User"
+        message={`Are you sure you want to delete user "${confirmModal.username}"? This action cannot be undone and will remove all associated data.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        type="danger"
+      />
+
+      <NotificationModal
+        isOpen={notification.isOpen}
+        onClose={() => setNotification({ isOpen: false, type: 'success', title: '', message: '' })}
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+      />
     </div>
   )
 }
