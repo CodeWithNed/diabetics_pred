@@ -3894,3 +3894,982 @@ RuntimeError: You must initialize a JWTManager with this flask application befor
 2026-03-05 04:14:35 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.20847880675648947
 2026-03-05 04:14:35 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 2
 2026-03-05 04:15:07 - diabetes_ai.api.plans_routes - INFO - Health plan created for user 2: Stress & Sleep Recovery Program
+2026-03-11 15:47:04 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-11 15:47:04 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-11 15:49:41 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-11 15:49:41 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-11 15:52:29 - diabetes_ai.api.auth_routes - INFO - New user registered: test2 (normal)
+2026-03-11 15:52:46 - diabetes_ai.api.auth_routes - INFO - User logged in: test2
+2026-03-11 15:59:56 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-11 15:59:56 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-11 15:59:56 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-11 15:59:56 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-11 15:59:56 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-11 15:59:57 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-11 15:59:57 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-11 15:59:57 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-11 15:59:57 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-11 15:59:57 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-11 15:59:57 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.78, Level: very_high
+2026-03-11 15:59:57 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-11 15:59:57 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7818783186490654
+2026-03-11 15:59:57 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-11 15:59:57 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-11 15:59:57 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.61s
+2026-03-11 15:59:57 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-11 15:59:57 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7818783186490654
+2026-03-11 15:59:57 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-11 15:59:57 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7818783186490654
+2026-03-11 15:59:57 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 13
+2026-03-11 16:00:23 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-11 16:00:23 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-11 16:05:48 - diabetes_ai.api.auth_routes - INFO - User logged out: test2
+2026-03-11 16:05:55 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-03-11 16:06:17 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-11 16:06:17 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-11 16:06:17 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-11 16:06:17 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-11 16:06:17 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-11 16:06:18 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-11 16:06:18 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-11 16:06:18 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-11 16:06:18 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-11 16:06:18 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-11 16:06:18 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-03-11 16:06:18 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-11 16:06:18 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516750470986153
+2026-03-11 16:06:18 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-11 16:06:18 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-11 16:06:18 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.51s
+2026-03-11 16:06:18 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-11 16:06:18 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516750470986153
+2026-03-11 16:06:18 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-11 16:06:18 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516750470986153
+2026-03-11 16:06:18 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 3
+2026-03-15 07:47:37 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-15 07:47:37 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-15 07:48:53 - diabetes_ai.api.auth_routes - INFO - User logged in: nuwin
+2026-03-15 07:51:53 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-15 07:51:53 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-15 07:51:53 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-15 07:51:53 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-15 07:51:53 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-15 07:51:54 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-15 07:51:54 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-15 07:51:54 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.82
+2026-03-15 07:51:54 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-15 07:51:54 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-15 07:51:54 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.73, Level: very_high
+2026-03-15 07:51:54 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-15 07:51:54 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7291728241974724
+2026-03-15 07:51:54 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-15 07:51:54 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-15 07:51:54 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.36s
+2026-03-15 07:51:54 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-15 07:51:54 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7291728241974724
+2026-03-15 07:51:54 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-15 07:51:54 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7291728241974724
+2026-03-15 07:51:54 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 12
+2026-03-15 07:52:08 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-15 07:52:08 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-15 07:53:54 - diabetes_ai.api.auth_routes - INFO - User logged out: nuwin
+2026-03-15 07:54:01 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-15 07:57:01 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-15 07:57:41 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-15 07:57:41 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-15 07:57:41 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-15 07:57:41 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-15 07:57:41 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-15 07:57:41 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-15 07:57:41 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-15 07:57:41 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.11
+2026-03-15 07:57:41 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-15 07:57:41 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-15 07:57:41 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.09, Level: low
+2026-03-15 07:57:41 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-15 07:57:41 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.09454329571136252
+2026-03-15 07:57:42 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-15 07:57:42 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-15 07:57:42 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.41s
+2026-03-15 07:57:42 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-15 07:57:42 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.09454329571136252
+2026-03-15 07:57:42 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-15 07:57:42 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.09454329571136252
+2026-03-15 07:57:42 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-15 08:21:56 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-15 08:21:56 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-15 08:21:56 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-15 08:21:56 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-15 08:21:56 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-15 08:21:56 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-15 08:21:56 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-15 08:21:56 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-03-15 08:21:56 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-15 08:21:56 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-15 08:21:56 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.34s
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-15 08:21:56 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-03-15 08:21:56 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-15 08:21:56 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-03-15 08:21:56 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-22 02:42:27 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-22 02:42:27 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-22 03:31:55 - diabetes_ai.api.auth_routes - INFO - User logged in: Tharupa
+2026-03-22 03:32:23 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-22 03:32:23 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-22 03:35:52 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-22 03:35:52 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-22 03:35:52 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-22 03:35:52 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-22 03:35:52 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-22 03:35:52 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-22 03:35:52 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-22 03:35:53 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-22 03:35:53 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-22 03:35:53 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-22 03:35:53 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.60, Level: high
+2026-03-22 03:35:53 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-22 03:35:53 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.5991030157549885
+2026-03-22 03:35:53 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-22 03:35:53 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-22 03:35:53 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.36s
+2026-03-22 03:35:53 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-22 03:35:53 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.5991030157549885
+2026-03-22 03:35:53 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-22 03:35:53 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.5991030157549885
+2026-03-22 03:35:53 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 11
+2026-03-22 03:41:18 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-22 03:41:18 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-22 03:41:18 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: mild
+2026-03-22 03:41:18 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-22 03:41:18 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-22 03:41:18 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-22 03:41:18 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.88, Level: very_high
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-22 03:41:18 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8778905031606192
+2026-03-22 03:41:18 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-22 03:41:18 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-22 03:41:18 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.30s
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-22 03:41:18 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8778905031606192
+2026-03-22 03:41:18 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-22 03:41:18 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8778905031606192
+2026-03-22 03:41:18 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 11
+2026-03-22 09:35:58 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-22 09:35:58 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-22 09:39:35 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-22 09:39:41 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-22 09:39:41 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-22 14:26:55 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-22 14:26:55 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-22 14:30:17 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-22 14:32:43 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-22 14:32:43 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-22 14:32:43 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-22 14:32:43 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-22 14:32:43 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-22 14:32:44 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-22 14:32:44 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-22 14:32:44 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-22 14:32:44 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-22 14:32:44 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-22 14:32:44 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.78, Level: very_high
+2026-03-22 14:32:44 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-22 14:32:44 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7818791661985416
+2026-03-22 14:32:44 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-22 14:32:44 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-22 14:32:44 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.43s
+2026-03-22 14:32:44 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-22 14:32:44 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7818791661985416
+2026-03-22 14:32:44 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-22 14:32:44 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7818791661985416
+2026-03-22 14:32:44 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-22 14:33:10 - diabetes_ai.api.auth_routes - INFO - User logged out: radith
+2026-03-22 14:39:18 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-22 14:42:40 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-22 14:42:40 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-22 14:42:40 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-22 14:42:40 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-22 14:42:40 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-22 14:42:41 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-22 14:42:41 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-22 14:42:41 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-22 14:42:41 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-22 14:42:41 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-22 14:42:41 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-03-22 14:42:41 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-22 14:42:41 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516750470986153
+2026-03-22 14:42:41 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-22 14:42:41 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-22 14:42:41 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.37s
+2026-03-22 14:42:41 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-22 14:42:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516750470986153
+2026-03-22 14:42:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-22 14:42:41 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516750470986153
+2026-03-22 14:42:41 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-24 02:11:23 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-24 02:11:23 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-24 02:14:48 - diabetes_ai.api.auth_routes - INFO - New user registered: test4 (normal)
+2026-03-24 02:15:09 - diabetes_ai.api.auth_routes - INFO - User logged in: test4
+2026-03-24 02:18:00 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-24 02:18:00 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-24 02:18:00 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-24 02:18:00 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-24 02:18:00 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-24 02:18:01 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-24 02:18:01 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-24 02:18:01 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.82
+2026-03-24 02:18:01 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-24 02:18:01 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-24 02:18:01 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.73, Level: very_high
+2026-03-24 02:18:01 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-24 02:18:01 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7291710421703688
+2026-03-24 02:18:02 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-24 02:18:02 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-24 02:18:02 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.33s
+2026-03-24 02:18:02 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-24 02:18:02 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7291710421703688
+2026-03-24 02:18:02 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-24 02:18:02 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7291710421703688
+2026-03-24 02:18:02 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 14
+2026-03-24 02:19:51 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-24 02:19:51 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-24 02:22:32 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-24 02:22:32 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-24 02:22:32 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-24 02:22:32 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-24 02:22:32 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-24 02:22:33 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-24 02:22:33 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-24 02:22:33 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-24 02:22:33 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-24 02:22:33 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-24 02:22:33 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-03-24 02:22:33 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-24 02:22:33 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-03-24 02:22:33 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-24 02:22:33 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-24 02:22:33 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.37s
+2026-03-24 02:22:33 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-24 02:22:33 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-03-24 02:22:33 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-24 02:22:33 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-03-24 02:22:33 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 14
+2026-03-24 02:22:43 - diabetes_ai.api.auth_routes - INFO - User logged out: test4
+2026-03-26 03:38:32 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-26 03:38:32 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-26 05:54:06 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-26 05:54:11 - diabetes_ai.api.auth_routes - INFO - User logged out: radith
+2026-03-26 05:54:39 - diabetes_ai.api.auth_routes - INFO - New user registered: imasha (normal)
+2026-03-26 05:54:51 - diabetes_ai.api.auth_routes - INFO - User logged in: imasha
+2026-03-26 05:57:02 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-26 05:57:02 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-26 05:57:02 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-26 05:57:02 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-26 05:57:02 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-26 05:57:04 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-26 05:57:04 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-26 05:57:04 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-26 05:57:04 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-26 05:57:04 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-26 05:57:04 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.60, Level: high
+2026-03-26 05:57:04 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-26 05:57:04 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.5991030157549885
+2026-03-26 05:57:05 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-26 05:57:05 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-26 05:57:05 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.51s
+2026-03-26 05:57:05 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-26 05:57:05 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.5991030157549885
+2026-03-26 05:57:05 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-26 05:57:05 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.5991030157549885
+2026-03-26 05:57:05 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 15
+2026-03-26 05:57:56 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-26 05:57:56 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-26 05:58:28 - diabetes_ai.api.auth_routes - INFO - User logged out: imasha
+2026-03-26 05:58:37 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-03-26 05:58:54 - diabetes_ai.api.auth_routes - INFO - User logged out: admin
+2026-03-26 08:26:47 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-26 08:27:05 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-26 08:27:05 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-26 08:27:05 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-26 08:27:05 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-26 08:27:05 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-26 08:27:07 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-26 08:27:07 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-26 08:27:07 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-26 08:27:07 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-26 08:27:07 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-26 08:27:07 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.60, Level: high
+2026-03-26 08:27:07 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-26 08:27:07 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.5991030157549885
+2026-03-26 08:27:08 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-26 08:27:08 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-26 08:27:08 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.43s
+2026-03-26 08:27:08 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-26 08:27:08 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.5991030157549885
+2026-03-26 08:27:08 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-26 08:27:08 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.5991030157549885
+2026-03-26 08:27:08 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-28 07:13:58 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-28 07:13:58 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-28 07:15:32 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-28 07:16:44 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-28 07:16:44 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-28 07:16:44 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-28 07:16:44 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-28 07:16:44 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-28 07:16:45 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-28 07:16:45 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-28 07:16:45 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-28 07:16:45 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-28 07:16:45 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-28 07:16:45 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-03-28 07:16:45 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-28 07:16:45 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516567921868214
+2026-03-28 07:16:45 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-28 07:16:45 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-28 07:16:45 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.18s
+2026-03-28 07:16:45 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-28 07:16:45 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516567921868214
+2026-03-28 07:16:45 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-28 07:16:45 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516567921868214
+2026-03-28 07:16:45 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-28 07:17:27 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-28 07:17:27 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-28 07:21:20 - diabetes_ai.api.auth_routes - INFO - User logged out: radith
+2026-03-28 12:19:42 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-28 12:19:42 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-28 12:23:52 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-03-28 12:25:24 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-28 12:25:24 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-28 12:25:24 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-28 12:25:24 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-28 12:25:24 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-28 12:25:25 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-28 12:25:25 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-28 12:25:25 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-28 12:25:25 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-28 12:25:25 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-28 12:25:25 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-03-28 12:25:25 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-28 12:25:25 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516567921868214
+2026-03-28 12:25:25 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-28 12:25:25 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-28 12:25:25 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.13s
+2026-03-28 12:25:25 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-28 12:25:25 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516567921868214
+2026-03-28 12:25:25 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-28 12:25:25 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516567921868214
+2026-03-28 12:25:25 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-03-29 03:05:44 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-29 03:05:44 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-29 03:26:50 - diabetes_ai.api.auth_routes - INFO - User logged in: test1
+2026-03-29 03:40:01 - diabetes_ai.api.auth_routes - INFO - User logged out: test1
+2026-03-29 04:36:24 - diabetes_ai.api.auth_routes - INFO - User logged in: test1
+2026-03-29 04:37:37 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-29 04:37:38 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-29 04:37:38 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-29 04:37:38 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-29 04:37:38 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-29 04:37:40 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-03-29 04:37:40 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-29 04:37:40 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-03-29 04:37:40 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-29 04:37:40 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-29 04:37:40 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-03-29 04:37:40 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-29 04:37:40 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516567921868214
+2026-03-29 04:37:40 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-29 04:37:40 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-29 04:37:40 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.17s
+2026-03-29 04:37:40 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-29 04:37:40 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516567921868214
+2026-03-29 04:37:40 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-29 04:37:40 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516567921868214
+2026-03-29 04:37:40 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 10
+2026-03-29 04:38:44 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-29 04:38:44 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-29 04:38:52 - diabetes_ai.api.auth_routes - INFO - User logged out: test1
+2026-03-29 04:39:05 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-03-29 07:43:50 - diabetes_ai.api.auth_routes - INFO - User logged in: test1
+2026-03-29 07:45:19 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-03-29 07:45:19 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-03-29 07:45:19 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-03-29 07:45:19 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-03-29 07:45:19 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-03-29 07:45:20 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-03-29 07:45:20 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-03-29 07:45:20 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-03-29 07:45:20 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-03-29 07:45:20 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-03-29 07:45:20 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-03-29 07:45:20 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-03-29 07:45:20 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-03-29 07:45:20 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-29 07:45:20 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-29 07:45:20 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.15s
+2026-03-29 07:45:20 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-03-29 07:45:20 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-03-29 07:45:20 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-03-29 07:45:20 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-03-29 07:45:20 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 10
+2026-03-29 07:46:41 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-03-29 07:46:41 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-03-29 07:46:51 - diabetes_ai.api.auth_routes - INFO - User logged out: test1
+2026-03-29 07:47:08 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-03-31 15:15:38 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-31 15:15:38 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-31 15:15:39 - diabetes_ai.api.auth_routes - INFO - New user registered: newuser (normal)
+2026-03-31 15:15:39 - diabetes_ai.api.auth_routes - INFO - New user registered: newadmin (admin)
+2026-03-31 15:15:40 - diabetes_ai.api.auth_routes - INFO - User logged in: testuser
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.6
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.3
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 2 simulations in 0.00s
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.5
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.6
+2026-03-31 15:15:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-31 15:27:53 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-31 15:27:53 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-31 15:27:53 - diabetes_ai.api.auth_routes - INFO - New user registered: newuser (normal)
+2026-03-31 15:27:53 - diabetes_ai.api.auth_routes - INFO - New user registered: newadmin (admin)
+2026-03-31 15:27:54 - diabetes_ai.api.auth_routes - INFO - User logged in: testuser
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.6
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.3
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Generated 2 simulations in 0.00s
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.5
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.6
+2026-03-31 15:27:56 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-31 15:29:08 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-03-31 15:29:08 - app - INFO - Diabetes Detection AI Backend initialized
+2026-03-31 15:29:08 - diabetes_ai.api.auth_routes - INFO - New user registered: newuser (normal)
+2026-03-31 15:29:09 - diabetes_ai.api.auth_routes - INFO - New user registered: newadmin (admin)
+2026-03-31 15:29:09 - diabetes_ai.api.auth_routes - INFO - User logged in: testuser
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.models.fusion.risk_scorer - INFO - RiskScorer initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.6
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.3
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Generated 2 simulations in 0.00s
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.5
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - SimulationAgent initialized
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.6
+2026-03-31 15:29:11 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-04-01 11:12:39 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-04-01 11:12:39 - app - INFO - Diabetes Detection AI Backend initialized
+2026-04-01 11:13:50 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-04-01 11:14:53 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 11:14:53 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 11:14:53 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 11:14:53 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 11:14:53 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 11:14:54 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-04-01 11:14:54 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 11:14:54 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 11:14:54 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 11:14:54 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 11:14:54 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.78, Level: very_high
+2026-04-01 11:14:54 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 11:14:54 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7818791661985416
+2026-04-01 11:14:55 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 11:14:55 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 11:14:55 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.31s
+2026-04-01 11:14:55 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 11:14:55 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7818791661985416
+2026-04-01 11:14:55 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 11:14:55 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7818791661985416
+2026-04-01 11:14:55 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-04-01 11:15:08 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 11:15:08 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 11:15:30 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 11:15:30 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 11:15:30 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 11:15:30 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 11:15:30 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 11:15:31 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-04-01 11:15:31 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 11:15:31 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-04-01 11:15:31 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 11:15:31 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 11:15:31 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-04-01 11:15:31 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 11:15:31 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516750470986153
+2026-04-01 11:15:31 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 11:15:31 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 11:15:31 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.25s
+2026-04-01 11:15:31 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 11:15:31 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516750470986153
+2026-04-01 11:15:31 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-04-01 11:15:31 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516750470986153
+2026-04-01 11:15:31 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-04-01 11:16:27 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 11:16:27 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 11:16:27 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 11:16:27 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 11:16:27 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 11:16:28 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 11:16:28 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 11:16:28 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.82
+2026-04-01 11:16:28 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 11:16:28 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 11:16:28 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.84, Level: very_high
+2026-04-01 11:16:28 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 11:16:28 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8431083352425994
+2026-04-01 11:16:28 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 11:16:28 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 11:16:28 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.24s
+2026-04-01 11:16:28 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 11:16:28 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8431083352425994
+2026-04-01 11:16:28 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 11:16:28 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8431083352425994
+2026-04-01 11:16:28 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 1
+2026-04-01 11:16:48 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 11:16:48 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 11:16:58 - diabetes_ai.api.auth_routes - INFO - User logged out: radith
+2026-04-01 11:17:08 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-04-01 11:17:39 - diabetes_ai.api.auth_routes - ERROR - Delete user error: (psycopg2.errors.NotNullViolation) null value in column "user_id" of relation "analysis_results" violates not-null constraint
+DETAIL:  Failing row contains (10, null, 2026-02-26 17:08:13.507705, complete, 0.1621246337890625, 88.24195196357056, 78.18809482256452, 0.85, very_high, null, {"gender": "male", "age": 50, "height_cm": "178", "weight_kg": "..., {"metadata": {"model_versions": {"lifestyle": "1.0.0", "retinal"..., ["Maintain a healthy diet rich in vegetables, whole grains, and ..., 2026-02-26 17:08:13.507708).
+
+[SQL: UPDATE analysis_results SET user_id=%(user_id)s WHERE analysis_results.id = %(analysis_results_id)s]
+[parameters: [{'user_id': None, 'analysis_results_id': 10}, {'user_id': None, 'analysis_results_id': 11}, {'user_id': None, 'analysis_results_id': 12}, {'user_id': None, 'analysis_results_id': 13}, {'user_id': None, 'analysis_results_id': 14}]]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-04-01 11:17:49 - diabetes_ai.api.auth_routes - ERROR - Delete user error: (psycopg2.errors.NotNullViolation) null value in column "user_id" of relation "analysis_results" violates not-null constraint
+DETAIL:  Failing row contains (10, null, 2026-02-26 17:08:13.507705, complete, 0.1621246337890625, 88.24195196357056, 78.18809482256452, 0.85, very_high, null, {"gender": "male", "age": 50, "height_cm": "178", "weight_kg": "..., {"metadata": {"model_versions": {"lifestyle": "1.0.0", "retinal"..., ["Maintain a healthy diet rich in vegetables, whole grains, and ..., 2026-02-26 17:08:13.507708).
+
+[SQL: UPDATE analysis_results SET user_id=%(user_id)s WHERE analysis_results.id = %(analysis_results_id)s]
+[parameters: [{'user_id': None, 'analysis_results_id': 10}, {'user_id': None, 'analysis_results_id': 11}, {'user_id': None, 'analysis_results_id': 12}, {'user_id': None, 'analysis_results_id': 13}, {'user_id': None, 'analysis_results_id': 14}]]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-04-01 11:18:22 - diabetes_ai.api.auth_routes - ERROR - Delete user error: (psycopg2.errors.NotNullViolation) null value in column "user_id" of relation "analysis_results" violates not-null constraint
+DETAIL:  Failing row contains (10, null, 2026-02-26 17:08:13.507705, complete, 0.1621246337890625, 88.24195196357056, 78.18809482256452, 0.85, very_high, null, {"gender": "male", "age": 50, "height_cm": "178", "weight_kg": "..., {"metadata": {"model_versions": {"lifestyle": "1.0.0", "retinal"..., ["Maintain a healthy diet rich in vegetables, whole grains, and ..., 2026-02-26 17:08:13.507708).
+
+[SQL: UPDATE analysis_results SET user_id=%(user_id)s WHERE analysis_results.id = %(analysis_results_id)s]
+[parameters: [{'user_id': None, 'analysis_results_id': 10}, {'user_id': None, 'analysis_results_id': 11}, {'user_id': None, 'analysis_results_id': 12}, {'user_id': None, 'analysis_results_id': 13}, {'user_id': None, 'analysis_results_id': 14}]]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-04-01 11:44:33 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-04-01 11:44:33 - app - INFO - Diabetes Detection AI Backend initialized
+2026-04-01 11:58:19 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-04-01 11:58:19 - app - INFO - Diabetes Detection AI Backend initialized
+2026-04-01 11:58:36 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-04-01 11:58:36 - app - INFO - Diabetes Detection AI Backend initialized
+2026-04-01 11:59:56 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-04-01 12:00:16 - diabetes_ai.api.auth_routes - INFO - User logged out: admin
+2026-04-01 12:00:43 - diabetes_ai.api.auth_routes - INFO - New user registered: radith (normal)
+2026-04-01 12:00:52 - diabetes_ai.api.auth_routes - INFO - User logged in: radith
+2026-04-01 12:01:13 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:01:13 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:01:13 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:01:13 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:01:13 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:01:14 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:01:14 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:01:14 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:01:14 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:01:14 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:01:14 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:01:14 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:01:14 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:01:16 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.90s
+2026-04-01 12:01:16 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:01:16 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:01:16 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:01:16 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:01:16 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 3
+2026-04-01 12:01:35 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kjxw0d05eq6b0e3wthsfaq2f` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 6245, Requested 2714. Please try again in 7.1925s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","type":"tokens","code":"rate_limit_exceeded"}}
+
+2026-04-01 12:01:35 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 429
+2026-04-01 12:01:41 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kjxw0d05eq6b0e3wthsfaq2f` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7951, Requested 2714. Please try again in 19.9875s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","type":"tokens","code":"rate_limit_exceeded"}}
+
+2026-04-01 12:01:41 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 429
+2026-04-01 12:01:42 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01kjxw0d05eq6b0e3wthsfaq2f` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 7919, Requested 2767. Please try again in 20.145s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing","type":"tokens","code":"rate_limit_exceeded"}}
+
+2026-04-01 12:01:42 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 429
+2026-04-01 12:02:10 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:02:10 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:02:10 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:02:10 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:02:10 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:02:11 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-04-01 12:02:11 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:02:11 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-04-01 12:02:11 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:02:11 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:02:11 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-04-01 12:02:11 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:02:11 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.4851648751332817
+2026-04-01 12:02:14 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 3.41s
+2026-04-01 12:02:14 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:02:14 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.4851648751332817
+2026-04-01 12:02:14 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-04-01 12:02:14 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.4851648751332817
+2026-04-01 12:02:14 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 3
+2026-04-01 12:02:51 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:02:51 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:02:51 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:02:51 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:02:51 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:02:51 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:02:51 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:02:51 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:02:51 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:02:51 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:02:51 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:02:51 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:02:51 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:02:52 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.47s
+2026-04-01 12:02:52 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:02:52 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:02:52 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:02:52 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:02:53 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 3
+2026-04-01 12:03:17 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:03:17 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:03:17 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:03:17 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:03:17 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:03:17 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-04-01 12:03:17 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:03:17 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.55
+2026-04-01 12:03:17 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:03:17 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:03:17 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.49, Level: moderate
+2026-04-01 12:03:17 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:03:17 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.48516572268275787
+2026-04-01 12:03:18 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.49s
+2026-04-01 12:03:18 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:03:18 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.48516572268275787
+2026-04-01 12:03:18 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-04-01 12:03:18 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.48516572268275787
+2026-04-01 12:03:19 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 3
+2026-04-01 12:03:51 - diabetes_ai.api.auth_routes - INFO - User logged out: radith
+2026-04-01 12:04:15 - diabetes_ai.api.auth_routes - INFO - New user registered: sana  (normal)
+2026-04-01 12:05:27 - diabetes_ai.api.auth_routes - INFO - New user registered: tharupa (normal)
+2026-04-01 12:05:42 - diabetes_ai.api.auth_routes - INFO - User logged in: tharupa
+2026-04-01 12:05:45 - diabetes_ai.api.auth_routes - INFO - User logged out: tharupa
+2026-04-01 12:05:56 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-04-01 12:06:05 - diabetes_ai.api.auth_routes - INFO - User deleted: sana  by admin
+2026-04-01 12:06:18 - diabetes_ai.api.auth_routes - INFO - User logged out: admin
+2026-04-01 12:07:25 - diabetes_ai.api.auth_routes - INFO - New user registered: nuwin (normal)
+2026-04-01 12:07:34 - diabetes_ai.api.auth_routes - INFO - User logged in: nuwin
+2026-04-01 12:09:31 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:09:31 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:09:31 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:09:31 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:09:31 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:09:32 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-04-01 12:09:32 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:09:32 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:09:32 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:09:32 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:09:32 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.78, Level: very_high
+2026-04-01 12:09:32 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:09:32 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.7818783186490654
+2026-04-01 12:09:34 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 2.23s
+2026-04-01 12:09:34 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:09:34 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.7818783186490654
+2026-04-01 12:09:34 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:09:34 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.7818783186490654
+2026-04-01 12:09:34 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 6
+2026-04-01 12:13:43 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:13:43 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:13:43 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:13:43 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:13:43 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:13:43 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:13:43 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:13:43 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:13:43 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:13:43 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:13:43 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:13:43 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:13:43 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:13:44 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.71s
+2026-04-01 12:13:44 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:13:44 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:13:44 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:13:44 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:13:44 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 6
+2026-04-01 12:14:03 - diabetes_ai.api.auth_routes - INFO - User logged out: nuwin
+2026-04-01 12:15:55 - diabetes_ai.api.auth_routes - INFO - New user registered: sana (normal)
+2026-04-01 12:16:11 - diabetes_ai.api.auth_routes - INFO - User logged in: sana
+2026-04-01 12:16:39 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:16:39 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:16:39 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:16:39 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:16:39 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:16:39 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:16:39 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:16:39 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:16:39 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:16:39 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:16:39 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:16:39 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:16:39 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:16:41 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.70s
+2026-04-01 12:16:41 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:16:41 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:16:41 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:16:41 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:16:41 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 7
+2026-04-01 12:16:49 - diabetes_ai.api.auth_routes - INFO - User logged out: sana
+2026-04-01 12:17:59 - diabetes_ai.api.auth_routes - INFO - New user registered: Srima (normal)
+2026-04-01 12:18:13 - diabetes_ai.api.auth_routes - INFO - User logged in: Srima
+2026-04-01 12:21:41 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:21:41 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:21:41 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:21:41 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:21:41 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:21:41 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:21:41 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:21:41 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.10
+2026-04-01 12:21:41 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:21:41 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:21:41 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.20, Level: low
+2026-04-01 12:21:41 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:21:41 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.20030020147449507
+2026-04-01 12:21:43 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.30s
+2026-04-01 12:21:43 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:21:43 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.20030020147449507
+2026-04-01 12:21:43 - diabetes_ai.agents.simulation_agent - INFO - Generated 5 simulations in 0.00s
+2026-04-01 12:21:43 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.20030020147449507
+2026-04-01 12:21:43 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 8
+2026-04-01 12:23:09 - diabetes_ai.api.auth_routes - INFO - User logged out: Srima
+2026-04-01 12:23:53 - diabetes_ai.api.auth_routes - INFO - New user registered: Himani  (normal)
+2026-04-01 12:24:21 - diabetes_ai.api.auth_routes - INFO - User logged in: Himani 
+2026-04-01 12:24:45 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:24:45 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:24:45 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:24:45 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:24:45 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:24:45 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:24:45 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:24:45 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:24:45 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:24:45 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:24:45 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:24:45 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:24:45 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:24:50 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 4.61s
+2026-04-01 12:24:50 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:24:50 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:24:50 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:24:50 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:24:50 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 9
+2026-04-01 12:25:13 - diabetes_ai.api.auth_routes - INFO - User logged out: Himani 
+2026-04-01 12:30:27 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-04-01 12:30:27 - app - INFO - Diabetes Detection AI Backend initialized
+2026-04-01 12:31:28 - diabetes_ai.api.auth_routes - INFO - New user registered: narya (normal)
+2026-04-01 12:33:07 - diabetes_ai.api.auth_routes - INFO - New user registered: nariya (normal)
+2026-04-01 12:33:17 - diabetes_ai.api.auth_routes - INFO - User logged in: nariya
+2026-04-01 12:34:01 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:34:01 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:34:01 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:34:01 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:34:01 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:34:02 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:34:02 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:34:02 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:34:02 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:34:02 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:34:02 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:34:02 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:34:02 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:34:03 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 1.26s
+2026-04-01 12:34:03 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:34:03 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:34:03 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:34:03 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:34:03 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 11
+2026-04-01 12:34:07 - diabetes_ai.api.auth_routes - INFO - User logged out: nariya
+2026-04-01 12:34:33 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-04-01 12:35:10 - diabetes_ai.api.auth_routes - INFO - User deleted: narya by admin
+2026-04-01 12:35:16 - diabetes_ai.api.auth_routes - INFO - User deleted: nariya by admin
+2026-04-01 12:47:01 - diabetes_ai.api.routes - INFO - All API routes registered
+2026-04-01 12:47:01 - app - INFO - Diabetes Detection AI Backend initialized
+2026-04-01 12:48:03 - diabetes_ai.api.auth_routes - INFO - New user registered: thisuka (normal)
+2026-04-01 12:48:14 - diabetes_ai.api.auth_routes - INFO - User logged in: thisuka
+2026-04-01 12:48:37 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:48:37 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:48:37 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:48:37 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:48:37 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:48:37 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: True, Severity: severe
+2026-04-01 12:48:37 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:48:37 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.88
+2026-04-01 12:48:37 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:48:37 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:48:37 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.90, Level: very_high
+2026-04-01 12:48:37 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:48:37 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.8958164592707722
+2026-04-01 12:48:38 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 12:48:38 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 12:48:38 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.33s
+2026-04-01 12:48:38 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:48:38 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.8958164592707722
+2026-04-01 12:48:38 - diabetes_ai.agents.simulation_agent - INFO - Generated 6 simulations in 0.00s
+2026-04-01 12:48:38 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.8958164592707722
+2026-04-01 12:48:38 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 16
+2026-04-01 12:49:17 - diabetes_ai.api.advice_routes - INFO - Running complete diabetes detection analysis
+2026-04-01 12:49:17 - diabetes_ai.agents.orchestrator - INFO - Starting orchestration for task: anonymous
+2026-04-01 12:49:17 - diabetes_ai.agents.orchestrator - INFO - Transformed frontend data: 26 fields -> 15 backend fields
+2026-04-01 12:49:17 - diabetes_ai.agents.orchestrator - INFO - Step 1: Analyzing retinal image and lifestyle data in parallel
+2026-04-01 12:49:17 - diabetes_ai.agents.retinal_agent - INFO - Starting retinal image analysis
+2026-04-01 12:49:18 - diabetes_ai.agents.retinal_agent - INFO - Retinal analysis complete. DR detected: False, Severity: none
+2026-04-01 12:49:18 - diabetes_ai.agents.lifestyle_agent - INFO - Starting lifestyle analysis for 15 features
+2026-04-01 12:49:18 - diabetes_ai.agents.lifestyle_agent - INFO - Lifestyle analysis complete. Risk score: 0.11
+2026-04-01 12:49:18 - diabetes_ai.agents.orchestrator - INFO - Step 2: Fusing retinal and lifestyle predictions
+2026-04-01 12:49:18 - diabetes_ai.agents.fusion_agent - INFO - Starting multimodal fusion
+2026-04-01 12:49:18 - diabetes_ai.agents.fusion_agent - INFO - Fusion complete. Fused risk score: 0.09, Level: low
+2026-04-01 12:49:18 - diabetes_ai.agents.orchestrator - INFO - Step 3: Generating personalized advice with LLM
+2026-04-01 12:49:18 - diabetes_ai.agents.llm_agent - INFO - Generating advice for risk score: 0.09454329571136252
+2026-04-01 12:49:18 - diabetes_ai.models.llm.llm_interface - ERROR - Groq API error: {"error":{"message":"Invalid API Key","type":"invalid_request_error","code":"invalid_api_key"}}
+
+2026-04-01 12:49:18 - diabetes_ai.models.llm.llm_interface - ERROR - LLM generation failed: Groq API request failed: 401
+2026-04-01 12:49:18 - diabetes_ai.agents.llm_agent - INFO - Advice generation complete in 0.26s
+2026-04-01 12:49:18 - diabetes_ai.agents.orchestrator - INFO - Step 4: Creating what-if simulations
+2026-04-01 12:49:18 - diabetes_ai.agents.simulation_agent - INFO - Creating simulations for risk score: 0.09454329571136252
+2026-04-01 12:49:18 - diabetes_ai.agents.simulation_agent - INFO - Generated 3 simulations in 0.00s
+2026-04-01 12:49:18 - diabetes_ai.agents.orchestrator - INFO - Orchestration completed successfully. Risk score: 0.09454329571136252
+2026-04-01 12:49:18 - diabetes_ai.api.results_routes - INFO - Analysis result saved for user 16
+2026-04-01 12:49:40 - diabetes_ai.api.auth_routes - INFO - User logged out: thisuka
+2026-04-01 12:49:48 - diabetes_ai.api.auth_routes - INFO - User logged in: admin
+2026-04-01 12:50:41 - diabetes_ai.api.auth_routes - ERROR - Delete user error: (psycopg2.errors.NotNullViolation) null value in column "user_id" of relation "analysis_results" violates not-null constraint
+DETAIL:  Failing row contains (10, null, 2026-02-26 17:08:13.507705, complete, 0.1621246337890625, 88.24195196357056, 78.18809482256452, 0.85, very_high, null, {"gender": "male", "age": 50, "height_cm": "178", "weight_kg": "..., {"metadata": {"model_versions": {"lifestyle": "1.0.0", "retinal"..., ["Maintain a healthy diet rich in vegetables, whole grains, and ..., 2026-02-26 17:08:13.507708).
+
+[SQL: UPDATE analysis_results SET user_id=%(user_id)s WHERE analysis_results.id = %(analysis_results_id)s]
+[parameters: [{'user_id': None, 'analysis_results_id': 10}, {'user_id': None, 'analysis_results_id': 11}, {'user_id': None, 'analysis_results_id': 12}, {'user_id': None, 'analysis_results_id': 13}, {'user_id': None, 'analysis_results_id': 14}]]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-04-01 12:51:11 - diabetes_ai.api.auth_routes - ERROR - Delete user error: (psycopg2.errors.NotNullViolation) null value in column "user_id" of relation "analysis_results" violates not-null constraint
+DETAIL:  Failing row contains (15, null, 2026-02-27 03:46:29.467366, complete, 81.85535073280334, 88.24195196357056, 89.58164592707722, 0.85, very_high, null, {"gender": "male", "age": 50, "height_cm": "178", "weight_kg": "..., {"metadata": {"model_versions": {"lifestyle": "1.0.0", "retinal"..., ["Maintain a healthy diet rich in vegetables, whole grains, and ..., 2026-02-27 03:46:29.467371).
+
+[SQL: UPDATE analysis_results SET user_id=%(user_id)s WHERE analysis_results.id = %(analysis_results_id)s]
+[parameters: {'user_id': None, 'analysis_results_id': 15}]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2026-04-01 12:56:22 - diabetes_ai.api.auth_routes - ERROR - Delete user error: (psycopg2.errors.NotNullViolation) null value in column "user_id" of relation "analysis_results" violates not-null constraint
+DETAIL:  Failing row contains (10, null, 2026-02-26 17:08:13.507705, complete, 0.1621246337890625, 88.24195196357056, 78.18809482256452, 0.85, very_high, null, {"gender": "male", "age": 50, "height_cm": "178", "weight_kg": "..., {"metadata": {"model_versions": {"lifestyle": "1.0.0", "retinal"..., ["Maintain a healthy diet rich in vegetables, whole grains, and ..., 2026-02-26 17:08:13.507708).
+
+[SQL: UPDATE analysis_results SET user_id=%(user_id)s WHERE analysis_results.id = %(analysis_results_id)s]
+[parameters: [{'user_id': None, 'analysis_results_id': 10}, {'user_id': None, 'analysis_results_id': 11}, {'user_id': None, 'analysis_results_id': 12}, {'user_id': None, 'analysis_results_id': 13}, {'user_id': None, 'analysis_results_id': 14}]]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
